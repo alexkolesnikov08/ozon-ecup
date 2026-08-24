@@ -49,9 +49,18 @@ ozon/
 ├── EXPERIMENTS.md                 # журнал экспериментов: лидерборд + карточки (гипотеза→метод→результат→вывод)
 ├── baseline-seacrh-ltv.ipynb      # исходный бейзлайн организаторов (референс CV-схемы и фичей)
 ├── sample_submit.csv              # формат сабмита
+├── src/                           # текущий этап данных:
+│   ├── eda.py                     #   EDA сырых данных -> reports/eda_*.md
+│   ├── build_features_ext_pca.py  #   exp02+exp07: base + x_* + pca_* -> data/v2/features_ext/
+│   ├── build_features_bgnbd.py    #   exp04: BTYD-фичи -> data/v2/features_bgnbd/
+│   ├── exp03_hurdle_priors.py     #   exp03: сегментные приоры P(buy)/E[z|buy] -> reports/
+│   └── exp06_calibration_indices.py  # exp06: сезонный/YoY/локальный индексы -> reports/
 ├── data/                          # НЕ в гите:
 │   ├── train.parquet              #   исходные данные (~172 МБ)
-│   └── v2/features/               #   извлечённые фичи по фолдам (fold_00..03, fold_end)
+│   ├── v2/MANIFEST.md             #   схема артефактов для этапа обучения
+│   ├── v2/features/               #   exp01-фичи по фолдам (fold_00..03, fold_end)
+│   ├── v2/features_ext/           #   base+x_+pca фичи по фолдам
+│   └── v2/features_bgnbd/         #   BTYD-фичи по фолдам
 └── archive/                       # закрытые эксперименты — только история
     ├── exp01/                     #   эксп. 1: оконные агрегаты + CatBoost (RMSLE 1.70261)
     │   ├── src/                   #   код: features.py → baselines.py → sanity_check.py → train.py → submit.py
@@ -105,13 +114,17 @@ ozon/
 | 0 | Наивный автогресс (gmv за 30д) | 2.19506 | done |
 | 1 | CatBoost на оконных агрегатах, 1000 iters | 1.70261 | done |
 | 2 | GBDT: расширенные фичи (конверсии, AOV, due_ratio, доли) + YoY | 1.69277 | done |
-| 3 | Hurdle в z-пространстве: P(buy)×E[z\|buy] | — | planned |
-| 4 | BG/NBD×Gamma-Gamma как генератор фичей | — | planned |
+| 7 | PCA-компоненты дневных панелей → GBDT | — | data ready |
+| 4 | BG/NBD×Gamma-Gamma как генератор фичей | — | data ready |
+| 6 | Калибровка уровня: z-shift × сезонный β | — | priors ok |
+| 3 | Hurdle в z-пространстве: P(buy)×E[z\|buy] | — | priors ok |
 | 5 | Двухмасштабный TCN, бленд с GBDT | — | planned |
+| 8 | Стекинг LGBM+Hist+Cat+Ridge, грид-поиск | 1.67103 | done |
 
-Порядок: **exp03 Hurdle → exp04 BG/NBD → exp05 TCN → B4 ZooStack**;
-Б2 плотное поле — отдельный перезапуск. Волна 1 (Б1,Б3,Б5 Arm A) завершена 2026-08-24 —
-все честно отрицательные, бейз exp02 (1.69277) устоял. Детали — в
+`data ready` = датасет фичей собран (`data/v2/MANIFEST.md` — схема, джойны, утечки),
+обучение — следующий этап. Волна 1 (Б1,Б3,Б5 Arm A) завершена 2026-08-24 — все честно
+отрицательные, бейз exp02 (1.69277) устоял; Б2 плотное поле — отдельный перезапуск.
+Порядок: базовая таблица (2+7+4) → калибровка (6) → hurdle (3). Детали — в
 [EXPERIMENTS.md](EXPERIMENTS.md).
 
 ## Окружение

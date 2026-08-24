@@ -1,0 +1,237 @@
+{
+  "protocol": "A: tune on 00+01->02 | B: OOF leave-one-fold-out | B2: production bases on 00..02, ES on 02 | C: meta on pooled OOF | fold_03 = holdout report",
+  "features": 141,
+  "grids": {
+    "lgbm": [
+      {
+        "n_estimators": 1500,
+        "learning_rate": 0.05,
+        "num_leaves": 63,
+        "min_child_samples": 50,
+        "feature_fraction": 0.8
+      },
+      {
+        "n_estimators": 1500,
+        "learning_rate": 0.05,
+        "num_leaves": 63,
+        "min_child_samples": 200,
+        "feature_fraction": 1.0
+      },
+      {
+        "n_estimators": 1500,
+        "learning_rate": 0.05,
+        "num_leaves": 127,
+        "min_child_samples": 50,
+        "feature_fraction": 0.8
+      },
+      {
+        "n_estimators": 1500,
+        "learning_rate": 0.05,
+        "num_leaves": 127,
+        "min_child_samples": 200,
+        "feature_fraction": 1.0
+      },
+      {
+        "n_estimators": 1500,
+        "learning_rate": 0.1,
+        "num_leaves": 63,
+        "min_child_samples": 50,
+        "feature_fraction": 0.8
+      },
+      {
+        "n_estimators": 1500,
+        "learning_rate": 0.1,
+        "num_leaves": 63,
+        "min_child_samples": 200,
+        "feature_fraction": 1.0
+      },
+      {
+        "n_estimators": 1500,
+        "learning_rate": 0.1,
+        "num_leaves": 127,
+        "min_child_samples": 50,
+        "feature_fraction": 0.8
+      },
+      {
+        "n_estimators": 1500,
+        "learning_rate": 0.1,
+        "num_leaves": 127,
+        "min_child_samples": 200,
+        "feature_fraction": 1.0
+      }
+    ],
+    "hist": [
+      {
+        "max_iter": 800,
+        "learning_rate": 0.05,
+        "max_leaf_nodes": 31,
+        "l2_regularization": 0.0,
+        "min_samples_leaf": 40
+      },
+      {
+        "max_iter": 800,
+        "learning_rate": 0.05,
+        "max_leaf_nodes": 31,
+        "l2_regularization": 5.0,
+        "min_samples_leaf": 100
+      },
+      {
+        "max_iter": 800,
+        "learning_rate": 0.05,
+        "max_leaf_nodes": 63,
+        "l2_regularization": 0.0,
+        "min_samples_leaf": 40
+      },
+      {
+        "max_iter": 800,
+        "learning_rate": 0.05,
+        "max_leaf_nodes": 63,
+        "l2_regularization": 5.0,
+        "min_samples_leaf": 100
+      },
+      {
+        "max_iter": 800,
+        "learning_rate": 0.1,
+        "max_leaf_nodes": 31,
+        "l2_regularization": 0.0,
+        "min_samples_leaf": 40
+      },
+      {
+        "max_iter": 800,
+        "learning_rate": 0.1,
+        "max_leaf_nodes": 31,
+        "l2_regularization": 5.0,
+        "min_samples_leaf": 100
+      },
+      {
+        "max_iter": 800,
+        "learning_rate": 0.1,
+        "max_leaf_nodes": 63,
+        "l2_regularization": 0.0,
+        "min_samples_leaf": 40
+      },
+      {
+        "max_iter": 800,
+        "learning_rate": 0.1,
+        "max_leaf_nodes": 63,
+        "l2_regularization": 5.0,
+        "min_samples_leaf": 100
+      }
+    ],
+    "cat": [
+      {
+        "iterations": 1200,
+        "learning_rate": 0.05,
+        "depth": 6,
+        "l2_leaf_reg": 3
+      },
+      {
+        "iterations": 1200,
+        "learning_rate": 0.05,
+        "depth": 6,
+        "l2_leaf_reg": 10
+      },
+      {
+        "iterations": 1200,
+        "learning_rate": 0.05,
+        "depth": 8,
+        "l2_leaf_reg": 3
+      },
+      {
+        "iterations": 1200,
+        "learning_rate": 0.05,
+        "depth": 8,
+        "l2_leaf_reg": 10
+      }
+    ],
+    "ridge": [
+      {
+        "alpha": 1.0
+      },
+      {
+        "alpha": 10.0
+      }
+    ]
+  },
+  "best_params": {
+    "lgbm": {
+      "n_estimators": 1500,
+      "learning_rate": 0.05,
+      "num_leaves": 63,
+      "min_child_samples": 200,
+      "feature_fraction": 1.0
+    },
+    "hist": {
+      "max_iter": 800,
+      "learning_rate": 0.05,
+      "max_leaf_nodes": 63,
+      "l2_regularization": 5.0,
+      "min_samples_leaf": 100
+    },
+    "cat": {
+      "iterations": 1200,
+      "learning_rate": 0.05,
+      "depth": 8,
+      "l2_leaf_reg": 3
+    },
+    "ridge": {
+      "alpha": 1.0
+    }
+  },
+  "rmsle_fold03": {
+    "stack": {
+      "ridgecv": 1.67105,
+      "ols": 1.67103
+    },
+    "solo": {
+      "lgbm": 1.67291,
+      "hist": 1.6723,
+      "cat": 1.67046,
+      "ridge": 1.71487
+    }
+  },
+  "meta_coefs": {
+    "ridgecv": {
+      "lgbm": 0.2687,
+      "hist": 0.1346,
+      "cat": 0.6147,
+      "ridge": -0.0081,
+      "intercept": 0.0249
+    },
+    "ols": {
+      "lgbm": 0.2668,
+      "hist": 0.1286,
+      "cat": 0.6147,
+      "ridge": 0.0,
+      "intercept": 0.0238
+    }
+  },
+  "submissions": {
+    "stack_ols": {
+      "file": "submissions/submission_stack_ols.csv",
+      "pred_mean": 37.23,
+      "pred_median": 6.96
+    },
+    "lgbm": {
+      "file": "submissions/submission_bl_lgbm.csv",
+      "pred_mean": 34.82,
+      "pred_median": 6.6
+    },
+    "hist": {
+      "file": "submissions/submission_bl_hist.csv",
+      "pred_mean": 34.56,
+      "pred_median": 6.56
+    },
+    "cat": {
+      "file": "submissions/submission_bl_cat.csv",
+      "pred_mean": 34.63,
+      "pred_median": 6.63
+    },
+    "ridge": {
+      "file": "submissions/submission_bl_ridge.csv",
+      "pred_mean": 306.93,
+      "pred_median": 9.85
+    }
+  },
+  "runtime_min": 32.7
+}

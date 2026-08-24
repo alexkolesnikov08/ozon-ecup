@@ -1,0 +1,157 @@
+{
+  "protocol": "A tune 00+01->02 | B OOF LOFO | B2 prod bases on 00..02 | C meta chosen on inner OOF split | D calibration grid on inner OOF | fold_03 holdout",
+  "features": 141,
+  "members": [
+    "lgbm",
+    "lgbm_q50",
+    "hist",
+    "cat",
+    "cat_q50",
+    "xgb"
+  ],
+  "grids": {
+    "lgbm": [
+      {
+        "n_estimators": 2500,
+        "learning_rate": 0.04,
+        "num_leaves": 63,
+        "min_child_samples": 100,
+        "feature_fraction": 0.85
+      },
+      {
+        "n_estimators": 2500,
+        "learning_rate": 0.04,
+        "num_leaves": 63,
+        "min_child_samples": 300,
+        "feature_fraction": 0.85
+      }
+    ],
+    "hist": [
+      {
+        "max_iter": 900,
+        "learning_rate": 0.04,
+        "max_leaf_nodes": 31,
+        "l2_regularization": 5.0,
+        "min_samples_leaf": 80
+      },
+      {
+        "max_iter": 900,
+        "learning_rate": 0.04,
+        "max_leaf_nodes": 63,
+        "l2_regularization": 5.0,
+        "min_samples_leaf": 80
+      }
+    ],
+    "cat": [
+      {
+        "iterations": 2000,
+        "learning_rate": 0.05,
+        "depth": 8,
+        "l2_leaf_reg": 3
+      },
+      {
+        "iterations": 2000,
+        "learning_rate": 0.05,
+        "depth": 8,
+        "l2_leaf_reg": 9
+      }
+    ],
+    "xgb": [
+      {
+        "n_estimators": 1800,
+        "learning_rate": 0.05,
+        "max_depth": 6,
+        "min_child_weight": 30,
+        "colsample_bytree": 0.8,
+        "subsample": 0.85
+      },
+      {
+        "n_estimators": 1800,
+        "learning_rate": 0.05,
+        "max_depth": 6,
+        "min_child_weight": 100,
+        "colsample_bytree": 0.8,
+        "subsample": 0.85
+      }
+    ]
+  },
+  "best_params": {
+    "lgbm": {
+      "n_estimators": 2500,
+      "learning_rate": 0.04,
+      "num_leaves": 63,
+      "min_child_samples": 300,
+      "feature_fraction": 0.85
+    },
+    "hist": {
+      "max_iter": 900,
+      "learning_rate": 0.04,
+      "max_leaf_nodes": 63,
+      "l2_regularization": 5.0,
+      "min_samples_leaf": 80
+    },
+    "cat": {
+      "iterations": 2000,
+      "learning_rate": 0.05,
+      "depth": 8,
+      "l2_leaf_reg": 3
+    },
+    "xgb": {
+      "n_estimators": 1800,
+      "learning_rate": 0.05,
+      "max_depth": 6,
+      "min_child_weight": 100,
+      "colsample_bytree": 0.8,
+      "subsample": 0.85
+    },
+    "lgbm_q50": {
+      "n_estimators": 2500,
+      "learning_rate": 0.04,
+      "num_leaves": 63,
+      "min_child_samples": 300,
+      "feature_fraction": 0.85
+    },
+    "cat_q50": {
+      "iterations": 2000,
+      "learning_rate": 0.05,
+      "depth": 8,
+      "l2_leaf_reg": 3
+    }
+  },
+  "meta_selection_inner_oof": {
+    "ridgecv": 1.74127,
+    "ols_pos": 1.74111,
+    "lgbm_meta": 1.74184
+  },
+  "calibration": {
+    "chosen": {
+      "c": -0.06,
+      "tau": 0.0
+    },
+    "inner_raw": 1.71211,
+    "inner_calib": 1.70385
+  },
+  "rmsle_fold03": {
+    "solo": {
+      "lgbm": 1.67333,
+      "lgbm_q50": 1.7708,
+      "hist": 1.67233,
+      "cat": 1.67062,
+      "cat_q50": 1.77141,
+      "xgb": 1.67318
+    },
+    "stack_raw": 1.67101,
+    "stack_calib": 1.66908
+  },
+  "submissions": {
+    "stack_v2": {
+      "file": "submissions/submission_stack_v2.csv",
+      "pred_mean": 38.16
+    },
+    "stack_v2_calib": {
+      "file": "submissions/submission_stack_v2_calib.csv",
+      "pred_mean": 35.88
+    }
+  },
+  "runtime_min": 65.4
+}
