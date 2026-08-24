@@ -1,6 +1,8 @@
 # data is too big for github (>100MB limit)
 data/*.parquet
-data/v2/
+*.parquet
+data/v2/*
+!data/v2/MANIFEST.md
 
 # python
 __pycache__/

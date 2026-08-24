@@ -1,0 +1,31 @@
+{
+  "s_seasonal_twin_window": 1.1628,
+  "yoy_cohort_user": 1.3067,
+  "local_drift_last_30d_vs_prev_30d": 0.8094,
+  "windows": {
+    "seasonal_num": "[2025-02-14 .. 2025-03-15]",
+    "seasonal_den": "[2025-01-15 .. 2025-02-13]",
+    "yoy_num": "[2026-01-15 .. 2026-02-13] mean gmv/user",
+    "yoy_den": "[2025-01-15 .. 2025-02-13] mean gmv/user, same cohort",
+    "drift_num": "[2026-01-14 .. 2026-02-13] gmv/row/day",
+    "drift_den": "[2025-12-16 .. 2026-01-14] gmv/row/day"
+  },
+  "recommended": {
+    "formula_z_space": "z' = z + c + beta*log(s); s in {s_seasonal, local_drift}",
+    "grid_c_log_s_local": [
+      -0.05,
+      -0.025,
+      0.0,
+      0.025,
+      0.05
+    ],
+    "grid_beta_log_s_seasonal": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "note": "подбирать c/beta на pooled OOF всех фолдов; fold_end предикт калибруется последним"
+  }
+}
