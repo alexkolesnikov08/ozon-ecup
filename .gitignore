@@ -20,3 +20,6 @@ venv/
 # local artifacts
 catboost_info/
 *.log
+
+# submission csvs are heavy (~6MB each), regenerate via src/*.py
+submissions/*.csv

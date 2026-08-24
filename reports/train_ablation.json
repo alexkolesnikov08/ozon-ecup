@@ -1,0 +1,174 @@
+{
+  "protocol": "train fold_00..02 -> val fold_03, RMSE on log1p(target)",
+  "seed": 42,
+  "results": {
+    "parity_d8_lr05_1000": {
+      "params": {
+        "loss_function": "RMSE",
+        "thread_count": -1,
+        "random_seed": 42,
+        "verbose": 0,
+        "n_estimators": 1000,
+        "learning_rate": 0.05,
+        "depth": 8,
+        "l2_leaf_reg": 3
+      },
+      "rmsle_fold03": 1.70289,
+      "fit_time_sec": 99.8,
+      "iterations_used": 1000
+    },
+    "d8_lr05_2000": {
+      "params": {
+        "loss_function": "RMSE",
+        "thread_count": -1,
+        "random_seed": 42,
+        "verbose": 0,
+        "n_estimators": 2000,
+        "learning_rate": 0.05,
+        "depth": 8,
+        "l2_leaf_reg": 3
+      },
+      "rmsle_fold03": 1.70242,
+      "fit_time_sec": 448.3,
+      "iterations_used": 2000
+    },
+    "d8_lr05_3000": {
+      "params": {
+        "loss_function": "RMSE",
+        "thread_count": -1,
+        "random_seed": 42,
+        "verbose": 0,
+        "n_estimators": 3000,
+        "learning_rate": 0.05,
+        "depth": 8,
+        "l2_leaf_reg": 3
+      },
+      "rmsle_fold03": 1.70217,
+      "fit_time_sec": 323.7,
+      "iterations_used": 3000
+    },
+    "d8_lr05_4000_od200": {
+      "params": {
+        "loss_function": "RMSE",
+        "thread_count": -1,
+        "random_seed": 42,
+        "verbose": 0,
+        "n_estimators": 4000,
+        "learning_rate": 0.05,
+        "depth": 8,
+        "l2_leaf_reg": 3
+      },
+      "rmsle_fold03": 1.70245,
+      "fit_time_sec": 263.3,
+      "iterations_used": 1646
+    },
+    "d8_lr03_3000": {
+      "params": {
+        "loss_function": "RMSE",
+        "thread_count": -1,
+        "random_seed": 42,
+        "verbose": 0,
+        "n_estimators": 3000,
+        "learning_rate": 0.03,
+        "depth": 8,
+        "l2_leaf_reg": 3
+      },
+      "rmsle_fold03": 1.70166,
+      "fit_time_sec": 364.7,
+      "iterations_used": 3000
+    },
+    "d8_lr03_5000_od300": {
+      "params": {
+        "loss_function": "RMSE",
+        "thread_count": -1,
+        "random_seed": 42,
+        "verbose": 0,
+        "n_estimators": 5000,
+        "learning_rate": 0.03,
+        "depth": 8,
+        "l2_leaf_reg": 3
+      },
+      "rmsle_fold03": 1.70124,
+      "fit_time_sec": 757.0,
+      "iterations_used": 4976
+    },
+    "d6_lr05_2000": {
+      "params": {
+        "loss_function": "RMSE",
+        "thread_count": -1,
+        "random_seed": 42,
+        "verbose": 0,
+        "n_estimators": 2000,
+        "learning_rate": 0.05,
+        "depth": 6,
+        "l2_leaf_reg": 3
+      },
+      "rmsle_fold03": 1.70307,
+      "fit_time_sec": 305.7,
+      "iterations_used": 2000
+    },
+    "d10_lr05_2000": {
+      "params": {
+        "loss_function": "RMSE",
+        "thread_count": -1,
+        "random_seed": 42,
+        "verbose": 0,
+        "n_estimators": 2000,
+        "learning_rate": 0.05,
+        "depth": 10,
+        "l2_leaf_reg": 3
+      },
+      "rmsle_fold03": 1.70156,
+      "fit_time_sec": 2364.5,
+      "iterations_used": 2000
+    },
+    "d8_lr05_2000_l2reg10": {
+      "params": {
+        "loss_function": "RMSE",
+        "thread_count": -1,
+        "random_seed": 42,
+        "verbose": 0,
+        "n_estimators": 2000,
+        "learning_rate": 0.05,
+        "depth": 8,
+        "l2_leaf_reg": 10
+      },
+      "rmsle_fold03": 1.70197,
+      "fit_time_sec": 194.4,
+      "iterations_used": 2000
+    },
+    "d8_lr05_2000_bern08": {
+      "params": {
+        "loss_function": "RMSE",
+        "thread_count": -1,
+        "random_seed": 42,
+        "verbose": 0,
+        "n_estimators": 2000,
+        "learning_rate": 0.05,
+        "depth": 8,
+        "l2_leaf_reg": 3,
+        "bootstrap_type": "Bernoulli",
+        "subsample": 0.8
+      },
+      "rmsle_fold03": 1.70184,
+      "fit_time_sec": 211.0,
+      "iterations_used": 2000
+    }
+  },
+  "best": {
+    "name": "d8_lr03_5000_od300",
+    "params": {
+      "loss_function": "RMSE",
+      "thread_count": -1,
+      "random_seed": 42,
+      "verbose": 0,
+      "n_estimators": 5000,
+      "learning_rate": 0.03,
+      "depth": 8,
+      "l2_leaf_reg": 3
+    },
+    "rmsle_fold03": 1.70124,
+    "fit_time_sec": 757.0,
+    "iterations_used": 4976
+  }
+}
