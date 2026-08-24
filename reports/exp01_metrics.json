@@ -1,0 +1,46 @@
+{
+  "config": {
+    "loss": "RMSE on log1p(target)",
+    "learning_rate": 0.05,
+    "depth": 8,
+    "l2_leaf_reg": 3,
+    "random_seed": 42,
+    "train": "fold_00+fold_01+fold_02",
+    "validation": "fold_03"
+  },
+  "results": {
+    "100": {
+      "rmsle_fold03": 1.70998,
+      "fit_time_sec": 4.2,
+      "best_iteration": 100,
+      "final_val_rmse_logspace": 1.70998
+    },
+    "300": {
+      "rmsle_fold03": 1.70534,
+      "fit_time_sec": 11.0,
+      "best_iteration": 300,
+      "final_val_rmse_logspace": 1.70535
+    },
+    "500": {
+      "rmsle_fold03": 1.70385,
+      "fit_time_sec": 17.7,
+      "best_iteration": 500,
+      "final_val_rmse_logspace": 1.70385
+    },
+    "1000": {
+      "rmsle_fold03": 1.70261,
+      "fit_time_sec": 37.1,
+      "best_iteration": 1000,
+      "final_val_rmse_logspace": 1.70261
+    }
+  },
+  "best": {
+    "n_estimators": 1000,
+    "rmsle_fold03": 1.70261
+  },
+  "baselines_exp00": {
+    "naive_gmv30": 2.195064600398462,
+    "zeros": 3.2036367535248926,
+    "median": 2.288999531788798
+  }
+}
