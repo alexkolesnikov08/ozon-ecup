@@ -45,22 +45,51 @@ Time-CV из бейзлайна: якоря с шагом 14 дней, тарг�
 
 ```
 ozon/
-├── README.md               # этот файл
-├── EXPERIMENTS.md          # журнал экспериментов: лидерборд + карточки (гипотеза→метод→результат→вывод)
-├── baseline-seacrh-ltv.ipynb  # исходный бейзлайн организаторов (референс CV-схемы и фичей)
-├── sample_submit.csv       # формат сабмита
-├── data/                   # НЕ в гите: train.parquet + извлечённые фичи data/v2/features/
-├── archive/                # закрытые эксперименты (код, отчёты, сабмиты) — только история
-│   └── exp01/              #   эксп. 1: оконные агрегаты + CatBoost (RMSLE 1.70261)
-└── src/                    # АКТИВНЫЙ код текущего эксперимента (создаётся под задачу)
+├── README.md                      # этот файл
+├── EXPERIMENTS.md                 # журнал экспериментов: лидерборд + карточки (гипотеза→метод→результат→вывод)
+├── baseline-seacrh-ltv.ipynb      # исходный бейзлайн организаторов (референс CV-схемы и фичей)
+├── sample_submit.csv              # формат сабмита
+├── data/                          # НЕ в гите:
+│   ├── train.parquet              #   исходные данные (~172 МБ)
+│   └── v2/features/               #   извлечённые фичи по фолдам (fold_00..03, fold_end)
+└── archive/                       # закрытые эксперименты — только история
+    └── exp01/                     #   эксп. 1: оконные агрегаты + CatBoost (RMSLE 1.70261)
+        ├── src/                   #   код: features.py → baselines.py → sanity_check.py → train.py → submit.py
+        ├── reports/               #   метрики (*.json) и графики (figures/)
+        └── submissions/           #   submission_exp01.csv
 ```
 
 Правила размещения:
 
-- Новый эксперимент работает в `src/`; после закрытия переносится в `archive/expNN/`
-  вместе с графиками, метриками и сабмитом.
+- Новый эксперимент работает в `src/` (создаётся под задачу); после закрытия переносится
+  в `archive/expNN/` вместе с отчётами (`reports/`) и сабмитом (`submissions/`).
+- Скрипты используют относительные пути и **запускаются из корня репо**: читают
+  `data/v2/features/...`, пишут `reports/` и `submissions/` в корне; при архивации
+  эти папки переезжают внутрь `archive/expNN/`.
 - Тяжёлые артефакты (паркеты фичей, сырые данные) живут в `data/` и игнорируются гитом.
-- Сабмиты хранятся в архиве соответствующего эксперимента, в корне не копятся.
+
+## Как воспроизвести (пример: exp01)
+
+Каждый скрипт автономен (`if __name__ == "__main__"`), порядок конвейера:
+
+```bash
+# 0) положить train.parquet в data/ (в гите его нет)
+
+# 1) извлечение фичей по юзерам -> data/v2/features/fold_*/batch_*.parquet
+.venv/bin/python archive/exp01/src/features.py
+
+# 2) sanity-чек: схемы, дат, юзеров по фолдам
+.venv/bin/python archive/exp01/src/sanity_check.py
+
+# 3) наивные референсы (zero/median/carry-forward) -> reports/exp00_baselines.json
+.venv/bin/python archive/exp01/src/baselines.py
+
+# 4) серия CatBoost по n_estimators + графики/метрики -> reports/
+.venv/bin/python archive/exp01/src/train.py
+
+# 5) финальная модель на всех 4 фолдах -> submissions/submission_exp01.csv
+.venv/bin/python archive/exp01/src/submit.py
+```
 
 ## Текущее состояние
 
@@ -78,13 +107,13 @@ ozon/
 
 ## Окружение
 
-- MacBook Pro M1 Pro (10 ядер, **32 GB RAM**, ~343 GB диска), macOS.
-- **Каноническое окружение для экспериментов — `.venv` (Python 3.12, uv):**
-  polars, scikit-learn, catboost. Запуск: `.venv/bin/python ...`.
-  Добавление пакетов: `uv pip install --python .venv/bin/python <pkg>`.
-- Глобальный Python 3.14 (homebrew) имеет полный стек (lightgbm, xgboost, torch+MPS,
-  optuna, statsmodels, jupyterlab) — резерв/ноутбуки; при необходимости пакеты доустанавливаются
-  в `.venv` перед соответствующим экспериментом.
+- **Каноническое окружение — `.venv` (Python 3.12)**: polars, scikit-learn, catboost.
+  Запуск: `.venv/bin/python <скрипт>`. Добавление пакетов:
+  `uv pip install --python .venv/bin/python <pkg>`.
+- Специального железа не требуется: тяжёлые шаги (извлечение фичей) батчируются по
+  50k юзеров; обучение CatBoost на полном трейне занимает минуты на CPU.
+- Для будущих NN-экспериментов может понадобиться GPU (MPS/CUDA) — пакеты ставятся
+  в `.venv` под конкретный эксперимент.
 - Matplotlib в скриптах — только с бэкендом `Agg`.
 
 ## Правила работы
