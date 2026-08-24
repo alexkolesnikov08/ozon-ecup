@@ -53,10 +53,14 @@ ozon/
 │   ├── train.parquet              #   исходные данные (~172 МБ)
 │   └── v2/features/               #   извлечённые фичи по фолдам (fold_00..03, fold_end)
 └── archive/                       # закрытые эксперименты — только история
-    └── exp01/                     #   эксп. 1: оконные агрегаты + CatBoost (RMSLE 1.70261)
-        ├── src/                   #   код: features.py → baselines.py → sanity_check.py → train.py → submit.py
-        ├── reports/               #   метрики (*.json) и графики (figures/)
-        └── submissions/           #   submission_exp01.csv
+    ├── exp01/                     #   эксп. 1: оконные агрегаты + CatBoost (RMSLE 1.70261)
+    │   ├── src/                   #   код: features.py → baselines.py → sanity_check.py → train.py → submit.py
+    │   ├── reports/               #   метрики (*.json) и графики (figures/)
+    │   └── submissions/           #   submission_exp01.csv
+    └── exp02/                     #   эксп. 2: конверсии/AOV/due_ratio/доли + YoY (RMSLE 1.69277)
+        ├── src/                   #   код: exp02_features.py → exp02_train.py → exp02_submit.py
+        ├── reports/               #   отчёт (report.md), метрики (*.json), figures/
+        └── submissions/           #   submission_exp02.csv
 ```
 
 Правила размещения:
@@ -97,13 +101,14 @@ ozon/
 |---|---|---|---|
 | 0 | Наивный автогресс (gmv за 30д) | 2.19506 | done |
 | 1 | CatBoost на оконных агрегатах, 1000 iters | 1.70261 | done |
-| 2 | GBDT: EWMA, тренды, декомпозиция, YoY | — | planned |
+| 2 | GBDT: расширенные фичи (конверсии, AOV, due_ratio, доли) + YoY | 1.69277 | done |
 | 3 | Hurdle в z-пространстве: P(buy)×E[z\|buy] | — | planned |
 | 4 | BG/NBD×Gamma-Gamma как генератор фичей | — | planned |
 | 5 | Двухмасштабный TCN, бленд с GBDT | — | planned |
 
-Порядок выполнения плановых: **2 → 3 → 4 → 5**. Детали гипотез и методов — в
-[EXPERIMENTS.md](EXPERIMENTS.md).
+Порядок выполнения плановых: **3 → 4 → 5**; вне очереди — беклог гипотез Б1–Б5
+(см. [EXPERIMENTS.md](EXPERIMENTS.md)): приоритет у Б1 (калибровка OOF exp02) и
+Б2 (плотное поле якорей). Детали гипотез и методов — в [EXPERIMENTS.md](EXPERIMENTS.md).
 
 ## Окружение
 
