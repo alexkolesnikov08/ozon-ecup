@@ -16,4 +16,5 @@ venv/
 .vscode/
 
 # local artifacts
+catboost_info/
 *.log
