@@ -1,0 +1,19 @@
+# data is too big for github (>100MB limit)
+data/*.parquet
+data/v2/
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.ipynb_checkpoints/
+
+# os / ide
+.DS_Store
+.idea/
+.vscode/
+
+# local artifacts
+*.log
