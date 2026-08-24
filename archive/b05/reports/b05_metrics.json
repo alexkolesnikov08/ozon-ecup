@@ -1,0 +1,482 @@
+{
+  "cluster_meta": {
+    "meta": {
+      "seed": 42,
+      "profile_cols": {
+        "log1p": [
+          "gmv_sum_30d",
+          "gmv_sum_90d",
+          "searches_sum_30d",
+          "searches_sum_90d",
+          "to_ord_sum_30d",
+          "to_ord_sum_90d",
+          "to_cart_sum_30d",
+          "aov_30"
+        ],
+        "raw": [
+          "recency_to_ord_days",
+          "recency_searches_days",
+          "tenure_days",
+          "active_days_30d",
+          "ord_days_30",
+          "conv_s2o",
+          "conv_c2o",
+          "conv_o2c",
+          "share_gmv_search_90",
+          "share_gmv_cat_90"
+        ]
+      },
+      "nan_policy": {
+        "conv_s2o/conv_c2o/conv_o2c": "fill 0.0 (denominator event absent)",
+        "others": "asserted null-free",
+        "recency_sentinel": "999 (no event ever) kept, log1p applied"
+      },
+      "versions": {
+        "python": "3.12.14",
+        "polars": "1.43.2",
+        "sklearn": "1.9.0",
+        "numpy": "2.5.2",
+        "scipy": "1.18.1"
+      },
+      "constraint_min_segment_share": 0.05
+    },
+    "profiles": {
+      "fold_00": {
+        "n": 250000,
+        "d": 18
+      },
+      "fold_01": {
+        "n": 250000,
+        "d": 18
+      },
+      "fold_02": {
+        "n": 250000,
+        "d": 18
+      },
+      "fold_03": {
+        "n": 250000,
+        "d": 18
+      },
+      "fold_end": {
+        "n": 250000,
+        "d": 18
+      }
+    },
+    "selection_table_fold03": [
+      {
+        "method": "kmeans",
+        "k": 4,
+        "silhouette": 0.2736,
+        "stability_ari_seeds": 0.9902,
+        "min_segment_share_subsample": 0.0026,
+        "bic_subsample": null,
+        "sec": 3.1
+      },
+      {
+        "method": "kmeans",
+        "k": 5,
+        "silhouette": 0.2447,
+        "stability_ari_seeds": 0.9864,
+        "min_segment_share_subsample": 0.0026,
+        "bic_subsample": null,
+        "sec": 3.2
+      },
+      {
+        "method": "kmeans",
+        "k": 6,
+        "silhouette": 0.2526,
+        "stability_ari_seeds": 0.9891,
+        "min_segment_share_subsample": 0.0026,
+        "bic_subsample": null,
+        "sec": 3.0
+      },
+      {
+        "method": "kmeans",
+        "k": 7,
+        "silhouette": 0.2381,
+        "stability_ari_seeds": 0.7928,
+        "min_segment_share_subsample": 0.0026,
+        "bic_subsample": null,
+        "sec": 3.2
+      },
+      {
+        "method": "kmeans",
+        "k": 8,
+        "silhouette": 0.2232,
+        "stability_ari_seeds": 0.9282,
+        "min_segment_share_subsample": 0.0026,
+        "bic_subsample": null,
+        "sec": 3.1
+      },
+      {
+        "method": "kmeans",
+        "k": 9,
+        "silhouette": 0.2274,
+        "stability_ari_seeds": 0.8027,
+        "min_segment_share_subsample": 0.0026,
+        "bic_subsample": null,
+        "sec": 28.5
+      },
+      {
+        "method": "kmeans",
+        "k": 10,
+        "silhouette": 0.2122,
+        "stability_ari_seeds": 0.8031,
+        "min_segment_share_subsample": 0.0026,
+        "bic_subsample": null,
+        "sec": 3.1
+      },
+      {
+        "method": "gmm",
+        "k": 4,
+        "silhouette": 0.1968,
+        "stability_ari_seeds": 0.6309,
+        "min_segment_share_subsample": 0.1861,
+        "bic_subsample": -1341521.6,
+        "sec": 4.4
+      },
+      {
+        "method": "gmm",
+        "k": 5,
+        "silhouette": 0.1391,
+        "stability_ari_seeds": 0.7397,
+        "min_segment_share_subsample": 0.1155,
+        "bic_subsample": -1611568.5,
+        "sec": 7.7
+      },
+      {
+        "method": "gmm",
+        "k": 6,
+        "silhouette": 0.1368,
+        "stability_ari_seeds": 0.8925,
+        "min_segment_share_subsample": 0.0806,
+        "bic_subsample": -1950254.6,
+        "sec": 5.7
+      },
+      {
+        "method": "gmm",
+        "k": 7,
+        "silhouette": 0.1125,
+        "stability_ari_seeds": 0.8467,
+        "min_segment_share_subsample": 0.064,
+        "bic_subsample": -1979886.1,
+        "sec": 5.6
+      },
+      {
+        "method": "gmm",
+        "k": 8,
+        "silhouette": 0.1426,
+        "stability_ari_seeds": 0.7907,
+        "min_segment_share_subsample": 0.0026,
+        "bic_subsample": -1991240.5,
+        "sec": 7.0
+      },
+      {
+        "method": "gmm",
+        "k": 9,
+        "silhouette": 0.1037,
+        "stability_ari_seeds": 0.7984,
+        "min_segment_share_subsample": 0.0026,
+        "bic_subsample": -2053142.4,
+        "sec": 8.3
+      },
+      {
+        "method": "gmm",
+        "k": 10,
+        "silhouette": 0.1402,
+        "stability_ari_seeds": 0.6823,
+        "min_segment_share_subsample": 0.0026,
+        "bic_subsample": -2246301.8,
+        "sec": 10.4
+      }
+    ],
+    "full_min_segment_share": {
+      "fold_00": 0.1642,
+      "fold_01": 0.1678,
+      "fold_02": 0.1679,
+      "fold_03": 0.1691,
+      "fold_end": 0.2084
+    },
+    "chosen": {
+      "method": "gmm",
+      "k": 4,
+      "rationale": "max silhouette among candidates with stability ARI>=0.5 and min segment >=5% verified on full-anchor fits; GMM BIC reported as cross-check"
+    },
+    "alignment": {
+      "space": "primary: Hungarian (linear_sum_assignment) on user-overlap contingency between adjacent anchors (maximizes preserved membership); secondary diagnostic: centroid distances in common raw-log space",
+      "pairs": [
+        {
+          "pair": "fold_00->fold_01",
+          "match_rate_all_users": 0.8033,
+          "ari_after_mapping": 0.5716,
+          "match_rate_if_centroid_mapping": 0.8033,
+          "max_centroid_dist": 643.22
+        },
+        {
+          "pair": "fold_01->fold_02",
+          "match_rate_all_users": 0.6073,
+          "ari_after_mapping": 0.3578,
+          "match_rate_if_centroid_mapping": 0.0528,
+          "max_centroid_dist": 648.521
+        },
+        {
+          "pair": "fold_02->fold_03",
+          "match_rate_all_users": 0.6112,
+          "ari_after_mapping": 0.3656,
+          "match_rate_if_centroid_mapping": 0.4236,
+          "max_centroid_dist": 636.348
+        },
+        {
+          "pair": "fold_03->fold_end",
+          "match_rate_all_users": 0.6163,
+          "ari_after_mapping": 0.3531,
+          "match_rate_if_centroid_mapping": 0.3614,
+          "max_centroid_dist": 623.882
+        }
+      ],
+      "maps": {
+        "fold_00->fold_01": {
+          "overlap_based": [
+            3,
+            0,
+            1,
+            2
+          ],
+          "centroid_based": [
+            3,
+            0,
+            1,
+            2
+          ]
+        },
+        "fold_01->fold_02": {
+          "overlap_based": [
+            3,
+            1,
+            2,
+            0
+          ],
+          "centroid_based": [
+            0,
+            2,
+            1,
+            3
+          ]
+        },
+        "fold_02->fold_03": {
+          "overlap_based": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "centroid_based": [
+            2,
+            1,
+            3,
+            0
+          ]
+        },
+        "fold_03->fold_end": {
+          "overlap_based": [
+            0,
+            2,
+            3,
+            1
+          ],
+          "centroid_based": [
+            2,
+            0,
+            3,
+            1
+          ]
+        }
+      }
+    },
+    "segment_shift_between_adjacent_anchors_share": [
+      0.1967,
+      0.3927,
+      0.3888,
+      0.3837
+    ],
+    "segment_sizes": {
+      "fold_00": {
+        "0": 0.16418,
+        "1": 0.28111,
+        "2": 0.3861,
+        "3": 0.1686
+      },
+      "fold_01": {
+        "0": 0.16963,
+        "1": 0.26637,
+        "2": 0.3962,
+        "3": 0.1678
+      },
+      "fold_02": {
+        "0": 0.25412,
+        "1": 0.25369,
+        "2": 0.32434,
+        "3": 0.16786
+      },
+      "fold_03": {
+        "0": 0.16913,
+        "1": 0.25005,
+        "2": 0.39514,
+        "3": 0.18568
+      },
+      "fold_end": {
+        "0": 0.20843,
+        "1": 0.24666,
+        "2": 0.23972,
+        "3": 0.30519
+      }
+    },
+    "runtime_cluster_sec": 151.5
+  },
+  "versions": {
+    "python": "3.12.14",
+    "polars": "1.43.2",
+    "catboost": "1.2.10",
+    "numpy": "2.5.2",
+    "platform": "macOS-26.6.2-arm64-arm-64bit"
+  },
+  "ablation_fold03": [
+    {
+      "variant": "ref66",
+      "n_features": 67,
+      "rmsle_fold03": 1.6934,
+      "fit_time_sec": 42.5
+    },
+    {
+      "variant": "seg_cat",
+      "n_features": 68,
+      "rmsle_fold03": 1.6942,
+      "fit_time_sec": 100.4
+    },
+    {
+      "variant": "seg_ohe",
+      "n_features": 71,
+      "rmsle_fold03": 1.69443,
+      "fit_time_sec": 70.6
+    }
+  ],
+  "ref_reproduction": {
+    "expected": 1.69277,
+    "reproduced": 1.6934,
+    "abs_deviation": 0.00063,
+    "within_tol": true
+  },
+  "lofo_best": {
+    "variant": "seg_cat",
+    "rows": [
+      {
+        "fold": "fold_00",
+        "rmsle": 1.81809,
+        "fit_time_sec": 118.0
+      },
+      {
+        "fold": "fold_01",
+        "rmsle": 1.77379,
+        "fit_time_sec": 101.7
+      },
+      {
+        "fold": "fold_02",
+        "rmsle": 1.71053,
+        "fit_time_sec": 100.3
+      },
+      {
+        "fold": "fold_03",
+        "rmsle": 1.6942,
+        "fit_time_sec": 145.0
+      }
+    ],
+    "reference_exp02": {
+      "fold_00": 1.81545,
+      "fold_01": 1.7742,
+      "fold_02": 1.7109,
+      "fold_03": 1.69277
+    }
+  },
+  "verdict": {
+    "adoption_threshold_fold03": 1.68938,
+    "best_variant": "seg_cat",
+    "best_rmsle_fold03": 1.6942,
+    "delta_vs_ref_fold03": 0.00143,
+    "lofo_no_degradation": false,
+    "adoption": false,
+    "note": "submit decision belongs to the coordinator"
+  },
+  "target_z_by_segment": {
+    "fold_00": {
+      "mean_z_by_segment": [
+        4.1275,
+        0.7697,
+        3.3187,
+        1.9709
+      ],
+      "between_segment_var_share": 0.2778
+    },
+    "fold_01": {
+      "mean_z_by_segment": [
+        3.9333,
+        0.6709,
+        3.1469,
+        1.7974
+      ],
+      "between_segment_var_share": 0.267
+    },
+    "fold_02": {
+      "mean_z_by_segment": [
+        2.3682,
+        0.5544,
+        3.7672,
+        1.5568
+      ],
+      "between_segment_var_share": 0.2968
+    },
+    "fold_03": {
+      "mean_z_by_segment": [
+        3.809,
+        0.5354,
+        2.9452,
+        1.617
+      ],
+      "between_segment_var_share": 0.2696
+    }
+  },
+  "segment_feature_importance_pct": {
+    "seg_cat_model_fold03_run": 0.7465,
+    "rank_among_67": 23
+  },
+  "per_segment_rmsle_fold03_best_vs_ref": [
+    {
+      "segment": 0,
+      "n": 42283,
+      "rmsle_best": 1.67502,
+      "rmsle_ref": 1.67488,
+      "delta": 0.00013
+    },
+    {
+      "segment": 1,
+      "n": 62512,
+      "rmsle_best": 1.292,
+      "rmsle_ref": 1.29086,
+      "delta": 0.00114
+    },
+    {
+      "segment": 2,
+      "n": 98786,
+      "rmsle_best": 1.82921,
+      "rmsle_ref": 1.82806,
+      "delta": 0.00115
+    },
+    {
+      "segment": 3,
+      "n": 46419,
+      "rmsle_best": 1.87998,
+      "rmsle_ref": 1.87961,
+      "delta": 0.00037
+    }
+  ],
+  "runtime_train_sec": 680.7
+}

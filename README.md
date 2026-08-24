@@ -57,10 +57,13 @@ ozon/
     │   ├── src/                   #   код: features.py → baselines.py → sanity_check.py → train.py → submit.py
     │   ├── reports/               #   метрики (*.json) и графики (figures/)
     │   └── submissions/           #   submission_exp01.csv
-    └── exp02/                     #   эксп. 2: конверсии/AOV/due_ratio/доли + YoY (RMSLE 1.69277)
-        ├── src/                   #   код: exp02_features.py → exp02_train.py → exp02_submit.py
-        ├── reports/               #   отчёт (report.md), метрики (*.json), figures/
-        └── submissions/           #   submission_exp02.csv
+    ├── exp02/                     #   эксп. 2: конверсии/AOV/due_ratio/доли + YoY (RMSLE 1.69277)
+    │   ├── src/                   #   код: exp02_features.py → exp02_train.py → exp02_submit.py
+    │   ├── reports/               #   отчёт (report.md), метрики (*.json), figures/
+    │   └── submissions/           #   submission_exp02.csv
+    ├── b01/                       #   волна 1 — калибровочный стек OOF (rejected)
+    ├── b03/                       #   волна 1 — STL-индекс сезонности V1' (rejected)
+    └── b05/                       #   волна 1 — сегментация как категориальная фича (rejected)
 ```
 
 Правила размещения:
@@ -106,9 +109,10 @@ ozon/
 | 4 | BG/NBD×Gamma-Gamma как генератор фичей | — | planned |
 | 5 | Двухмасштабный TCN, бленд с GBDT | — | planned |
 
-Порядок выполнения плановых: **3 → 4 → 5**; вне очереди — беклог гипотез Б1–Б5
-(см. [EXPERIMENTS.md](EXPERIMENTS.md)): приоритет у Б1 (калибровка OOF exp02) и
-Б2 (плотное поле якорей). Детали гипотез и методов — в [EXPERIMENTS.md](EXPERIMENTS.md).
+Порядок: **exp03 Hurdle → exp04 BG/NBD → exp05 TCN → B4 ZooStack**;
+Б2 плотное поле — отдельный перезапуск. Волна 1 (Б1,Б3,Б5 Arm A) завершена 2026-08-24 —
+все честно отрицательные, бейз exp02 (1.69277) устоял. Детали — в
+[EXPERIMENTS.md](EXPERIMENTS.md).
 
 ## Окружение
 

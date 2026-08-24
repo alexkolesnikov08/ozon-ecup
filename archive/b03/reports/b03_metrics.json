@@ -1,0 +1,286 @@
+{
+  "versions": {
+    "python": "3.12.14",
+    "polars": "1.43.2",
+    "catboost": "1.2.10",
+    "numpy": "2.5.2",
+    "platform": "macOS-26.6.2-arm64-arm-64bit"
+  },
+  "protocol": {
+    "train": [
+      "fold_00",
+      "fold_01",
+      "fold_02"
+    ],
+    "val": "fold_03",
+    "n_estimators": 1000,
+    "seed": 42,
+    "n_features": 67,
+    "references": {
+      "exp02_66f_fold03": 1.69277,
+      "proxy_beta0": 1.853,
+      "proxy_beta1": 1.835
+    },
+    "adoption": {
+      "threshold_fold03": 1.68938,
+      "threshold_proxy_vs_beta1": 1.825
+    }
+  },
+  "M_used_per_fold": {
+    "fold_00": {
+      "log_M_strict": -0.005296,
+      "prior_year_cov": 0.0667,
+      "log_M_assist": -0.003923
+    },
+    "fold_01": {
+      "log_M_strict": 0.015353,
+      "prior_year_cov": 0.5333,
+      "log_M_assist": -0.011035
+    },
+    "fold_02": {
+      "log_M_strict": 0.016157,
+      "prior_year_cov": 1.0,
+      "log_M_assist": -0.025879
+    },
+    "fold_03": {
+      "log_M_strict": 0.022259,
+      "prior_year_cov": 1.0
+    },
+    "fold_proxy": {
+      "log_M_strict": 0.00051,
+      "prior_year_cov": 0.0,
+      "log_M_assist": -0.002939
+    },
+    "fold_end": {
+      "log_M_strict": 0.014628,
+      "prior_year_cov": 1.0
+    }
+  },
+  "ablation_fold03": {
+    "i_ref": {
+      "rmsle_fold03": 1.69341,
+      "fit_sec": 120.9,
+      "dev_vs_exp02": 0.00064
+    },
+    "ii_histnorm": {
+      "rmsle_fold03": 1.69432,
+      "fit_sec": 121.0
+    },
+    "iii_full_strict": {
+      "rmsle_fold03": 1.69503,
+      "fit_sec": 124.2,
+      "log_M_fold03": 0.022259,
+      "bias_z_mean_pred_minus_actualnorm": 0.0977
+    },
+    "iv_ref_beta1": {
+      "rmsle_fold03": 1.69448,
+      "s_hat_used": 1.020407,
+      "note": "closest causal analog of exp02 s_hat for the Jan15-Feb13 twin window; exp02 never calibrated fold_03"
+    }
+  },
+  "proxy": {
+    "ref_beta_grid": [
+      {
+        "beta": 0.0,
+        "rmsle_proxy": 1.83728
+      },
+      {
+        "beta": 0.25,
+        "rmsle_proxy": 1.8326
+      },
+      {
+        "beta": 0.5,
+        "rmsle_proxy": 1.8287
+      },
+      {
+        "beta": 0.75,
+        "rmsle_proxy": 1.82556
+      },
+      {
+        "beta": 1.0,
+        "rmsle_proxy": 1.8232
+      }
+    ],
+    "replication_check": {
+      "beta0_expected": 1.853,
+      "beta1_expected": 1.835,
+      "beta0_got": 1.83728,
+      "beta1_got": 1.8232,
+      "tol": 0.02,
+      "ok_within_tol": true,
+      "note": "exp02 published grid: 1.85297 -> 1.83478; small systematic shift expected from model-transfer amplification on the off-distribution proxy population (45d histories), fold_03 dev is 20x smaller"
+    },
+    "ii_histnorm": {
+      "rmsle_proxy": 1.83878
+    },
+    "ii_plus_beta1": {
+      "rmsle_proxy": 1.82396
+    },
+    "iii_strict_causal": {
+      "rmsle_proxy": 1.83892,
+      "log_M_proxy_strict": 0.00051,
+      "note": "fully causal at proxy time (no 2024 data -> no annual term)"
+    },
+    "iii_assist_oracle_calendar": {
+      "rmsle_proxy": 1.83849,
+      "log_M_proxy_assist": -0.002939,
+      "fit_sec": 116.4,
+      "note": "oracle calendar knowledge at proxy time (realised m_hat of the window itself), symmetric to exp02's realised-s_hat protocol"
+    }
+  },
+  "deciles_fold03": {
+    "by": "deciles of raw gmv_sum_90d (official cache), fold_03",
+    "best_variant": "ii_histnorm",
+    "worst_decile_delta": 0.00241,
+    "no_degradation_flag": true,
+    "note": "produced for reporting despite negative adoption decision",
+    "table": [
+      {
+        "decile": 1,
+        "n": 25000,
+        "activity_mean_gmv90": 0.0,
+        "rmsle_ref": 1.29648,
+        "rmsle_best": 1.29692,
+        "delta_best_minus_ref": 0.00044
+      },
+      {
+        "decile": 2,
+        "n": 25000,
+        "activity_mean_gmv90": 0.0,
+        "rmsle_ref": 1.28399,
+        "rmsle_best": 1.28496,
+        "delta_best_minus_ref": 0.00096
+      },
+      {
+        "decile": 3,
+        "n": 25000,
+        "activity_mean_gmv90": 4.11,
+        "rmsle_ref": 1.48281,
+        "rmsle_best": 1.48443,
+        "delta_best_minus_ref": 0.00161
+      },
+      {
+        "decile": 4,
+        "n": 25000,
+        "activity_mean_gmv90": 25.83,
+        "rmsle_ref": 1.78012,
+        "rmsle_best": 1.78073,
+        "delta_best_minus_ref": 0.00061
+      },
+      {
+        "decile": 5,
+        "n": 25000,
+        "activity_mean_gmv90": 59.39,
+        "rmsle_ref": 1.871,
+        "rmsle_best": 1.87185,
+        "delta_best_minus_ref": 0.00085
+      },
+      {
+        "decile": 6,
+        "n": 25000,
+        "activity_mean_gmv90": 109.26,
+        "rmsle_ref": 1.92648,
+        "rmsle_best": 1.92625,
+        "delta_best_minus_ref": -0.00023
+      },
+      {
+        "decile": 7,
+        "n": 25000,
+        "activity_mean_gmv90": 186.04,
+        "rmsle_ref": 1.89794,
+        "rmsle_best": 1.89842,
+        "delta_best_minus_ref": 0.00048
+      },
+      {
+        "decile": 8,
+        "n": 25000,
+        "activity_mean_gmv90": 311.48,
+        "rmsle_ref": 1.85199,
+        "rmsle_best": 1.85238,
+        "delta_best_minus_ref": 0.00039
+      },
+      {
+        "decile": 9,
+        "n": 25000,
+        "activity_mean_gmv90": 554.86,
+        "rmsle_ref": 1.77419,
+        "rmsle_best": 1.7766,
+        "delta_best_minus_ref": 0.00241
+      },
+      {
+        "decile": 10,
+        "n": 25000,
+        "activity_mean_gmv90": 1702.03,
+        "rmsle_ref": 1.61,
+        "rmsle_best": 1.61053,
+        "delta_best_minus_ref": 0.00053
+      }
+    ]
+  },
+  "decision": {
+    "adopted": false,
+    "reason": "no improvement over reference on fold_03 (best ii_histnorm=1.69432 vs ref 1.69341)",
+    "variant": null,
+    "variant_name": "ii_histnorm",
+    "best_rmsle_fold03": 1.69432,
+    "ref_rmsle_fold03_reproduced": 1.69341,
+    "calibration_for_submit": "none (raw predictions)"
+  },
+  "runtime_train_sec": 486.5,
+  "calibration_shift": {
+    "method": "reference model refit; RMSLE(z + ln s) over s-grid; s* = optimal scalar calibration",
+    "fold_03": {
+      "grid_s": [
+        0.9512,
+        1.0,
+        1.0513,
+        1.1052,
+        1.1618,
+        1.2214,
+        1.284,
+        1.3499
+      ],
+      "grid_rmsle": [
+        1.692,
+        1.69355,
+        1.69657,
+        1.70106,
+        1.707,
+        1.71438,
+        1.72319,
+        1.73338
+      ],
+      "s_star": 0.9512,
+      "ln_shift_star": -0.05,
+      "rmsle_at_star": 1.692
+    },
+    "proxy": {
+      "grid_s": [
+        0.9512,
+        1.0,
+        1.0513,
+        1.1052,
+        1.1618,
+        1.2214,
+        1.284,
+        1.3499
+      ],
+      "grid_rmsle": [
+        1.84669,
+        1.83909,
+        1.83282,
+        1.8279,
+        1.82433,
+        1.82213,
+        1.8213,
+        1.82185
+      ],
+      "s_star": 1.2905,
+      "ln_shift_star": 0.255,
+      "rmsle_at_star": 1.8213
+    },
+    "proxy_exp02_beta1_equivalent": 1.1628,
+    "interpretation": "proxy window runs ~+15-16% above the model's implicit level (festive ramp) -> beta=1 helps there; fold_03 window needs no shift -> neither beta nor M helps"
+  },
+  "runtime_diag_sec": 207.3
+}
