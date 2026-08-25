@@ -1,17 +1,23 @@
-# Манифест артефактов данных (handoff для обучения)
+# Манифест артефактов данных
 
-Дата: 2026-08-24. Автор: этап данных (EDA + трансформации). Обучение и сборка бейзлайна —
-следующий этап. Все пути от корня репо. Окружение: `.venv` (polars, sklearn, scipy, catboost).
+Дата: 2026-08-25. Схема фичевых датасетов для обучения; журнал экспериментов —
+[EXPERIMENTS.md](../../EXPERIMENTS.md). Все пути от корня репо.
+Окружение: `.venv` (polars, sklearn, scipy, catboost).
 
 ## Карта экспериментов → артефакты
 
 | Эксперимент | Артефакт | Генератор |
 |---|---|---|
-| exp02 — расширенные фичи | `data/v2/features_ext/fold_*/batch_*.parquet` (блок `x_*`) | `src/build_features_ext_pca.py` |
+| exp02 — расширенные фичи | `data/v2/features_ext/fold_*/batch_*.parquet` (блок `x_*`); кэш `data/v2/features_exp02/<fold>/batch_*.parquet` | `src/build_features_ext_pca.py`; `archive/exp02/src/exp02_features.py` |
 | exp07 — PCA дневных панелей | тот же файл (блок `pca_00..31`) | там же |
 | exp04 — BTYD фичи | `data/v2/features_bgnbd/<fold>.parquet` + `fit_params.json` | `src/build_features_bgnbd.py` |
 | exp03 — hurdle приоры | `reports/exp03_hurdle_priors.json` | `src/exp03_hurdle_priors.py` |
 | exp06 — калибровка уровня | `reports/exp06_calibration.json` | `src/exp06_calibration_indices.py` |
+| exp10 (b01) — pseudo-лейблы | `data/v2/b01_pseudo/` | `archive/exp10/src/b01_features.py` |
+| exp11 (b03) — PLSI профили | `data/v2/b03_plsi/` | `archive/exp11/src/b03_features.py` |
+| exp12 (b05) — GMM сегменты | `data/v2/b05_seg/` | `archive/exp12/src/b05_cluster.py` |
+
+Нумерация экспериментов сквозная (`exp00..expNN`), старые имена — алиасы в скобках.
 
 ## Схема `features_ext` (250k строк × 133 колонки, по фолду fold_00..03 + fold_end)
 
@@ -55,7 +61,7 @@ df = feats.join(btyd, on=["anchor_date", "user_id"], how="left")
 
 Train = concat(fold_00..02), val = fold_03, прод-инференс = fold_end. Лосс: RMSE на z=log1p(target),
 финальный предикт expm1. Референсные точки fold_03: zero=3.20364, median=2.28900, naive=2.19506,
-CatBoost(exp01)=1.70261.
+CatBoost(exp01)=1.70261, лучший соло (exp13, 141f)=1.67027, чемпион (exp15, стек+калибровка)=1.66908.
 
 ## Калибровка после обучения (exp06)
 
