@@ -1,0 +1,141 @@
+{
+  "config": {
+    "H": 30,
+    "platform_models": [
+      "holt_damped",
+      "hw_add7",
+      "sarima_w",
+      "drift_ratio"
+    ],
+    "shrink_k": [
+      5,
+      25
+    ],
+    "allocation": "share preserve / pseudo-count shrink"
+  },
+  "folds": {
+    "fold_00": {
+      "anchor": "2025-12-03",
+      "platform_prev30": 24368403.39235472,
+      "platform_next30_actual": 27509228.129415818,
+      "naive_rmsle_ref_eda": 2.2263,
+      "rmsle": {
+        "naive": 2.226302064963208,
+        "holt_damped__preserve": 2.2384520852486403,
+        "holt_damped__shrink5": 2.763327404230594,
+        "holt_damped__shrink25": 3.0045671264198144,
+        "hw_add7__preserve": 2.234067776098742,
+        "hw_add7__shrink5": 2.7494082653755796,
+        "hw_add7__shrink25": 2.9893324950115865,
+        "sarima_w__preserve": 2.2429966632970544,
+        "sarima_w__shrink5": 2.777500077942637,
+        "sarima_w__shrink25": 3.020045403575754,
+        "drift_ratio__preserve": 2.2363436030009542,
+        "drift_ratio__shrink5": 2.756664881148426,
+        "drift_ratio__shrink25": 2.997279122900395,
+        "oracle_preserve": 2.2491461036823432
+      },
+      "platform_forecast_total": {
+        "holt_damped": 26046071.441317033,
+        "hw_add7": 25443152.742980767,
+        "sarima_w": 26668903.351216163,
+        "drift_ratio": 25756405.11620166
+      }
+    },
+    "fold_01": {
+      "anchor": "2025-12-17",
+      "platform_prev30": 25725321.437200714,
+      "platform_next30_actual": 24807768.772174504,
+      "naive_rmsle_ref_eda": 2.21661,
+      "rmsle": {
+        "naive": 2.216609830096938,
+        "holt_damped__preserve": 2.2572482224764148,
+        "holt_damped__shrink5": 2.8905945764513397,
+        "holt_damped__shrink25": 3.1563473272548292,
+        "hw_add7__preserve": 2.2532526970993203,
+        "hw_add7__shrink5": 2.8806644172687563,
+        "hw_add7__shrink25": 3.145728362876756,
+        "sarima_w__preserve": 2.2756764715260602,
+        "sarima_w__shrink5": 2.9354933219528636,
+        "sarima_w__shrink25": 3.204228480329481,
+        "drift_ratio__preserve": 2.227062255338009,
+        "drift_ratio__shrink5": 2.8135633727226845,
+        "drift_ratio__shrink25": 3.07366785723145,
+        "oracle_preserve": 2.2083463905008514
+      },
+      "platform_forecast_total": {
+        "holt_damped": 30284528.79978053,
+        "hw_add7": 29831012.989422083,
+        "sarima_w": 32396290.972842716,
+        "drift_ratio": 26888734.82710076
+      }
+    },
+    "fold_02": {
+      "anchor": "2025-12-31",
+      "platform_prev30": 27951117.438780833,
+      "platform_next30_actual": 21143792.791321628,
+      "naive_rmsle_ref_eda": 2.22673,
+      "rmsle": {
+        "naive": 2.226730261020858,
+        "holt_damped__preserve": 2.094426211080123,
+        "holt_damped__shrink5": 2.5868758278571913,
+        "holt_damped__shrink25": 2.828039803234959,
+        "hw_add7__preserve": 2.1117843452742173,
+        "hw_add7__shrink5": 2.6364262319773095,
+        "hw_add7__shrink25": 2.8824629720117017,
+        "sarima_w__preserve": 2.0411351765161605,
+        "sarima_w__shrink5": 2.4039373421291197,
+        "sarima_w__shrink25": 2.621896472927439,
+        "drift_ratio__preserve": 2.2419082679375877,
+        "drift_ratio__shrink5": 2.9501931153838887,
+        "drift_ratio__shrink25": 3.2188699032716217,
+        "oracle_preserve": 2.148159031606542
+      },
+      "platform_forecast_total": {
+        "holt_damped": 16626958.86323259,
+        "hw_add7": 18091871.934150334,
+        "sarima_w": 11770021.229106879,
+        "drift_ratio": 29326277.15139158
+      }
+    },
+    "fold_03": {
+      "anchor": "2026-01-14",
+      "platform_prev30": 25356485.895038247,
+      "platform_next30_actual": 21008510.408304542,
+      "naive_rmsle_ref_eda": 2.19506,
+      "rmsle": {
+        "naive": 2.1950646003984615,
+        "holt_damped__preserve": 2.164793135494561,
+        "holt_damped__shrink5": 2.7733551343600853,
+        "holt_damped__shrink25": 3.024315067357057,
+        "hw_add7__preserve": 2.172770405351283,
+        "hw_add7__shrink5": 2.7936649965925375,
+        "hw_add7__shrink25": 3.0461059067817944,
+        "sarima_w__preserve": 2.1686790419790234,
+        "sarima_w__shrink5": 2.7832907363710677,
+        "sarima_w__shrink25": 3.0349814215968838,
+        "drift_ratio__preserve": 2.1994228749654203,
+        "drift_ratio__shrink5": 2.8592967384297485,
+        "drift_ratio__shrink25": 3.1162009125178987,
+        "oracle_preserve": 2.1470354090504387
+      },
+      "platform_forecast_total": {
+        "holt_damped": 22601979.54385738,
+        "hw_add7": 23322297.604649466,
+        "sarima_w": 22952440.84360611,
+        "drift_ratio": 25758432.909530777
+      }
+    },
+    "fold_end": {
+      "anchor": "2026-02-13",
+      "platform_prev30": 21008510.408304542,
+      "platform_forecast_total": {
+        "holt_damped": 22616283.980729416,
+        "hw_add7": 23040411.185432203,
+        "sarima_w": 23375520.23609134,
+        "drift_ratio": 21009655.988685373
+      }
+    }
+  },
+  "summary_table_md": "| Вариант | fold_00 | fold_01 | fold_02 | fold_03 |\n|---|---|---|---|---|\n| drift_ratio__preserve | 2.23634 | 2.22706 | 2.24191 | 2.19942 ** |\n| drift_ratio__shrink25 | 2.99728 ** | 3.07367 | 3.21887 | 3.11620 |\n| drift_ratio__shrink5 | 2.75666 ** | 2.81356 | 2.95019 | 2.85930 |\n| holt_damped__preserve | 2.23845 | 2.25725 | 2.09443 ** | 2.16479 |\n| holt_damped__shrink25 | 3.00457 | 3.15635 | 2.82804 ** | 3.02432 |\n| holt_damped__shrink5 | 2.76333 | 2.89059 | 2.58688 ** | 2.77336 |\n| hw_add7__preserve | 2.23407 | 2.25325 | 2.11178 ** | 2.17277 |\n| hw_add7__shrink25 | 2.98933 | 3.14573 | 2.88246 ** | 3.04611 |\n| hw_add7__shrink5 | 2.74941 | 2.88066 | 2.63643 ** | 2.79366 |\n| naive | 2.22630 | 2.21661 | 2.22673 | 2.19506 ** |\n| oracle_preserve | 2.24915 | 2.20835 | 2.14816 | 2.14704 ** |\n| sarima_w__preserve | 2.24300 | 2.27568 | 2.04114 ** | 2.16868 |\n| sarima_w__shrink25 | 3.02005 | 3.20423 | 2.62190 ** | 3.03498 |\n| sarima_w__shrink5 | 2.77750 | 2.93549 | 2.40394 ** | 2.78329 |"
+}
