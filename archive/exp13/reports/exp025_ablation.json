@@ -1,0 +1,33 @@
+{
+  "protocol": "train fold_00..02 -> fold_03 holdout; catboost rmse-z lr0.05 d8 l2_3 seed42 x1000 (exp02 parity)",
+  "exp02_reference_fold03": 1.69277,
+  "stoplist_semantic_dups": [
+    "x_aov_30d",
+    "x_due_ratio",
+    "x_share_gmv_cat_30d",
+    "x_share_gmv_search_30d"
+  ],
+  "results": {
+    "ours66": {
+      "n_features": 66,
+      "rmsle_fold03": 1.69273,
+      "fit_time_sec": 42.8
+    },
+    "ours_pca_btyd": {
+      "n_features": 109,
+      "rmsle_fold03": 1.67055,
+      "fit_time_sec": 55.0
+    },
+    "ours_all_new": {
+      "n_features": 147,
+      "rmsle_fold03": 1.67034,
+      "fit_time_sec": 70.5
+    },
+    "theirs_all": {
+      "n_features": 141,
+      "rmsle_fold03": 1.67027,
+      "fit_time_sec": 67.0
+    }
+  },
+  "runtime_min": 4.0
+}
