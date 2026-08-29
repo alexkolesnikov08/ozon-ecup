@@ -1,0 +1,304 @@
+{
+  "protocol": "A tune 00+01->02 | B OOF LOFO | B2 prod bases on 00..02 | C meta chosen on inner OOF split | D calibration grid on inner OOF | fold_03 holdout",
+  "dataset": "data/v3 (85 features, pruned schema)",
+  "features": 85,
+  "members": [
+    "lgbm",
+    "lgbm_q50",
+    "hist",
+    "cat",
+    "cat_q50",
+    "xgb"
+  ],
+  "grids": {
+    "lgbm": [
+      {
+        "n_estimators": 2500,
+        "learning_rate": 0.04,
+        "num_leaves": 63,
+        "min_child_samples": 100,
+        "feature_fraction": 0.85
+      },
+      {
+        "n_estimators": 2500,
+        "learning_rate": 0.04,
+        "num_leaves": 63,
+        "min_child_samples": 300,
+        "feature_fraction": 0.85
+      },
+      {
+        "n_estimators": 2500,
+        "learning_rate": 0.04,
+        "num_leaves": 127,
+        "min_child_samples": 100,
+        "feature_fraction": 0.85
+      },
+      {
+        "n_estimators": 2500,
+        "learning_rate": 0.04,
+        "num_leaves": 127,
+        "min_child_samples": 300,
+        "feature_fraction": 0.85
+      }
+    ],
+    "hist": [
+      {
+        "max_iter": 900,
+        "learning_rate": 0.04,
+        "max_leaf_nodes": 31,
+        "l2_regularization": 5.0,
+        "min_samples_leaf": 80
+      },
+      {
+        "max_iter": 900,
+        "learning_rate": 0.04,
+        "max_leaf_nodes": 63,
+        "l2_regularization": 5.0,
+        "min_samples_leaf": 80
+      },
+      {
+        "max_iter": 900,
+        "learning_rate": 0.08,
+        "max_leaf_nodes": 31,
+        "l2_regularization": 5.0,
+        "min_samples_leaf": 80
+      },
+      {
+        "max_iter": 900,
+        "learning_rate": 0.08,
+        "max_leaf_nodes": 63,
+        "l2_regularization": 5.0,
+        "min_samples_leaf": 80
+      }
+    ],
+    "cat": [
+      {
+        "iterations": 2000,
+        "learning_rate": 0.05,
+        "depth": 8,
+        "l2_leaf_reg": 3
+      },
+      {
+        "iterations": 2000,
+        "learning_rate": 0.05,
+        "depth": 8,
+        "l2_leaf_reg": 9
+      },
+      {
+        "iterations": 2000,
+        "learning_rate": 0.05,
+        "depth": 10,
+        "l2_leaf_reg": 3
+      },
+      {
+        "iterations": 2000,
+        "learning_rate": 0.05,
+        "depth": 10,
+        "l2_leaf_reg": 9
+      }
+    ],
+    "xgb": [
+      {
+        "n_estimators": 1800,
+        "learning_rate": 0.05,
+        "max_depth": 6,
+        "min_child_weight": 30,
+        "colsample_bytree": 0.8,
+        "subsample": 0.85
+      },
+      {
+        "n_estimators": 1800,
+        "learning_rate": 0.05,
+        "max_depth": 6,
+        "min_child_weight": 100,
+        "colsample_bytree": 0.8,
+        "subsample": 0.85
+      },
+      {
+        "n_estimators": 1800,
+        "learning_rate": 0.05,
+        "max_depth": 10,
+        "min_child_weight": 30,
+        "colsample_bytree": 0.8,
+        "subsample": 0.85
+      },
+      {
+        "n_estimators": 1800,
+        "learning_rate": 0.05,
+        "max_depth": 10,
+        "min_child_weight": 100,
+        "colsample_bytree": 0.8,
+        "subsample": 0.85
+      }
+    ]
+  },
+  "best_params": {
+    "lgbm": {
+      "n_estimators": 2500,
+      "learning_rate": 0.04,
+      "num_leaves": 63,
+      "min_child_samples": 100,
+      "feature_fraction": 0.85
+    },
+    "hist": {
+      "max_iter": 900,
+      "learning_rate": 0.04,
+      "max_leaf_nodes": 63,
+      "l2_regularization": 5.0,
+      "min_samples_leaf": 80
+    },
+    "cat": {
+      "iterations": 2000,
+      "learning_rate": 0.05,
+      "depth": 10,
+      "l2_leaf_reg": 3
+    },
+    "xgb": {
+      "n_estimators": 1800,
+      "learning_rate": 0.05,
+      "max_depth": 10,
+      "min_child_weight": 30,
+      "colsample_bytree": 0.8,
+      "subsample": 0.85
+    },
+    "lgbm_q50": {
+      "n_estimators": 2500,
+      "learning_rate": 0.04,
+      "num_leaves": 63,
+      "min_child_samples": 100,
+      "feature_fraction": 0.85
+    },
+    "cat_q50": {
+      "iterations": 2000,
+      "learning_rate": 0.05,
+      "depth": 10,
+      "l2_leaf_reg": 3
+    }
+  },
+  "cat_importance_top20": [
+    [
+      "eb_e_gmv30",
+      7.37
+    ],
+    [
+      "eb_lambda_n30",
+      7.12
+    ],
+    [
+      "to_ord_sum_90d",
+      5.45
+    ],
+    [
+      "tenure_days",
+      5.35
+    ],
+    [
+      "bgnbd_en30",
+      4.79
+    ],
+    [
+      "row_days_total",
+      3.96
+    ],
+    [
+      "bgnbd_e_gmv30",
+      3.53
+    ],
+    [
+      "gmv_per_order_90d",
+      2.16
+    ],
+    [
+      "pca_05",
+      1.72
+    ],
+    [
+      "pca_00",
+      1.67
+    ],
+    [
+      "bgnbd_p_alive",
+      1.66
+    ],
+    [
+      "gmv_max_90d",
+      1.62
+    ],
+    [
+      "x_visit_only_days_30d",
+      1.47
+    ],
+    [
+      "x_gmv_ewma_h30",
+      1.46
+    ],
+    [
+      "gmv_sum_90d",
+      1.41
+    ],
+    [
+      "searches_sum_7d",
+      1.34
+    ],
+    [
+      "pca_12",
+      1.34
+    ],
+    [
+      "gmv_mean_90d",
+      1.27
+    ],
+    [
+      "recency_searches_capped90",
+      1.27
+    ],
+    [
+      "searches_sum_14d",
+      1.22
+    ]
+  ],
+  "meta_selection_inner_oof": {
+    "ridgecv": 1.73942,
+    "ols_pos": 1.73808,
+    "lgbm_meta": 1.73963
+  },
+  "calibration": {
+    "chosen": {
+      "c": -0.12,
+      "tau": 0.0
+    },
+    "inner_raw": 1.70986,
+    "inner_calib": 1.69608
+  },
+  "rmsle_fold03": {
+    "solo": {
+      "lgbm": 1.67321,
+      "lgbm_q50": 1.77359,
+      "hist": 1.67238,
+      "cat": 1.67081,
+      "cat_q50": 1.76477,
+      "xgb": 1.68534
+    },
+    "stack_raw": 1.67278,
+    "stack_calib": 1.6715
+  },
+  "submissions": {
+    "v3_cat": {
+      "file": "submissions/submission_v3_cat.csv",
+      "pred_mean": 34.38
+    },
+    "v3_lgbm": {
+      "file": "submissions/submission_v3_lgbm.csv",
+      "pred_mean": 34.32
+    },
+    "stack_v3": {
+      "file": "submissions/submission_stack_v3.csv",
+      "pred_mean": 39.32
+    },
+    "stack_v3_calib": {
+      "file": "submissions/submission_stack_v3_calib.csv",
+      "pred_mean": 34.76
+    }
+  },
+  "runtime_min": 213.8
+}
