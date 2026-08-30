@@ -53,6 +53,8 @@
 | 23 | 2026-08-30 | Per-user CatBoost n=3 it20 (персоналка)            | **1.62463**        | done       | LB 1.6862 overfit; blend 1.66 |
 | 24 | 2026-08-30 | Per-user n=5 it25 (dense 5 anchors)                | 1.63498 (1k)       | done       | pilot -0.027 vs n3 |
 | 25 | 2026-08-30 | Per-user n=3 it50 / n=5 it25 heavy 6h              | 1.638 (1k)         | planned    | 6h на 50c серваке, 85ms/user |
+| 26 | 2026-08-30 | Segmented LTV + Transformer blend (PR #5)          | 1.675 (quick)      | done       | leakage-safe, ADI/CV², 26w |
+| 26p| 2026-08-30 | Pilots: dense/lag/transformer diagnostics          | —                  | archive    | см. archive/exp26_pilots |
 
 Справочные точки fold_03: zero 3.20364 · median 2.28900 · naive 2.19506.
 
@@ -605,3 +607,23 @@
 - **Результат**: planned, пилот 1k `1.63803` mean 16.12мс (см. dense pilot).
 - **Вывод**: выделен отдельно, запуск вручную.
 - **Артефакты**: `archive/exp23/src/train_6h.py` (заглушка), логика в `src/per_user_full.py`.
+
+---
+
+## exp26 — Segmented LTV pipeline с Transformer blend (PR #5)
+
+- **Гипотеза**: leakage-safe иерархия global→class→cluster по ADI/CV² классам спроса даст робастность на нулевых/редких юзерах; Transformer на 26 неделях ×4 канала добавит декоррелированный сигнал.
+- **Метод**: `src/build_segmented_features.py` — 205 признаков из `data/train.parquet` без `v2/v3`, 26-недельные ряды, классификация `smooth/erratic/intermittent/lumpy` (ADI 1.32/CV² 0.49), `MiniBatchKMeans` до 3 кластеров внутри класса. `src/train_segmented_submit.py` — global CatBoost + class/cluster модели (автовыбор CatBoost/HistGBDT/Ridge по размеру группы), бленд на `fold_02`, honest `fold_03`, refit на `00..03→fold_end`. `src/train_weekly_transformer.py` — Transformer (d_model 64, 2 layers, 4 heads) на тензоре `(N,26,4)`, `src/blend_segmented_transformer.py` — мета-бленд classical/transformer по классам. Launchers `scripts/run_segmented_pipeline.sh` (CPU) и `run_full_segmented_ensemble.sh` (CUDA).
+- **Результат**: quick-проверка classical на `fold_03` RMSLE 1.67537 (120 it), smoke 5 фолдов ×250k — 205 признаков, 0 NULL, без дублей. Full runtime Transformer без GPU не гонялся (PyTorch в отдельной зависимости).
+- **Вывод**: done, влито в main как PR #5 (a2c9480). Дальше — замер на full иттерациях и сравнение с per-user.
+- **Артефакты**: `src/build_segmented_features.py`, `src/train_segmented_submit.py`, `src/train_weekly_transformer.py`, `src/blend_segmented_transformer.py`, `docs/SEGMENTED_PIPELINE_RUNBOOK.md`, `requirements_segmented.txt`, `requirements_transformer.txt`.
+
+---
+
+## exp26_pilots — Диагностика per-user / dense / lag / transformer (архив)
+
+- **Гипотеза**: пилоты для выбора n/итераций/архитектуры перед full-прогоном.
+- **Метод**: `archive/exp26_pilots/src/` — 11 скриптов: `grid_dense_*` (n=3/5/10 dense), `grid_per_user_*` (grid depth/lr/l2/it), `lag_*` (30d/60d 4ch lags), `per_user_n7_*` (n=7 it30), `transformer_*` (90d pilot/full). 1k pilots, CatBoost/Transformer сравнение с aggregates.
+- **Результат**: best grid `d4 lr0.1 l2=1 it50` 1.581 (1k, n=3), n=5 vs n=3 -0.027, n=7 24ms/юзера overfit, lag 30d RMSLE 1.86 vs agg 1.67 — lags хуже, transformer pilot 1.8 vs agg 1.67.
+- **Вывод**: архив диагностики, основа exp23/24 подтверждена, lags и чистый Transformer без статики не конкурентны.
+- **Артефакты**: `archive/exp26_pilots/` (src + reports/grid_per_user_hypers.json, per_user_n7_full.json).

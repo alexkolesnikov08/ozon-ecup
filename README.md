@@ -43,9 +43,7 @@ Time-CV: якоря fold_00..03 = `2025-12-03 / 12-17 / 12-31 / 2026-01-14` с �
 
 ## Текущее состояние
 
-Чемпион: **exp15 — стек v2 (lgbm/hist/cat/xgb + q50-члены) с OOF-калибровкой,
-CV RMSLE(fold_03) = 1.66908**. Полный журнал всех экспериментов (включая rejected),
-лидерборд и карточки — в [EXPERIMENTS.md](EXPERIMENTS.md).
+Чемпион по LB: **exp15 — стек v2 + калибровка, LB 1.66035** (CV fold_03 1.66908). Лучший CV — **exp23 per-user CatBoost n=3 it20, CV 1.62463** (LB 1.686 — переобучение). Полный журнал — в [EXPERIMENTS.md](EXPERIMENTS.md).
 
 | # | Эксперимент | RMSLE (fold_03) | Статус |
 |---|---|---|---|
@@ -54,40 +52,57 @@ CV RMSLE(fold_03) = 1.66908**. Полный журнал всех экспери
 | 2 | GBDT: расширенные фичи + YoY | 1.69277 | done |
 | 8 | Стек v1 LGBM+Hist+Cat+Ridge | 1.67103 | done |
 | 13 | Абляция фичевых блоков (соло CatBoost, 141f) | 1.67027 | done |
-| **15** | **Стек v2 + OOF-калибровка** | **1.66908** | **champion** |
+| **15** | **Стек v2 + OOF-калибровка** | **1.66908** | **LB champion 1.660** |
+| 17 | Тренды / брошенные корзины / сезонность | 1.66847 | done |
+| **23** | **Per-user CatBoost n=3 it20 (47 мин)** | **1.62463** | **CV champion (LB 1.686)** |
+| 24 | Per-user n=5 it25 dense (1k pilot) | 1.63498 | done |
+| 25 | Heavy 6h per-user n=3 it50 (planned) | 1.638 (1k) | planned |
+| 26 | Segmented LTV + Transformer blend (PR #5) | 1.675 (quick) | done |
+| 26p | Pilots per-user/dense/lag/transformer | — | archive |
 
-Дальше по приоритету: hurdle end-to-end через фабрику exp1000 → плотные якоря → TCN-бленд.
+Дальше: стабилизация per-user (blend 0.5 → LB 1.66) + segmented ансамбль на CPU/GPU.
 
 ## Структура репозитория
 
 ```
 ozon/
 ├── README.md                      # этот файл
-├── EXPERIMENTS.md                 # журнал экспериментов exp00–exp16: лидерборд + карточки
-├── baseline-search-ltv.ipynb      # исходный бейзлайн организаторов (референс CV-схемы)
+├── EXPERIMENTS.md                 # журнал exp00–26: лидерборд + карточки
+├── docs/SEGMENTED_PIPELINE_RUNBOOK.md # запуск сегментированного пайплайна (PR #5)
+├── baseline-search-ltv.ipynb      # исходный бейзлайн организаторов
 ├── sample_submit.csv              # формат сабмита
 ├── data/                          # НЕ в гите:
 │   ├── train.parquet              #   исходные данные (~172 МБ)
-│   └── v2/                        #   фичевые датасеты по фолдам (см. v2/MANIFEST.md)
-├── data/v2/MANIFEST.md            # схема фичевых артефактов (в гите)
-├── reports/                       # живые отчёты: EDA + приоры exp03/exp06
-├── src/                           # активные инструменты (не закрытые эксперименты):
-│   ├── eda.py                     #   автоотчёт EDA
-│   ├── build_features_ext_pca.py  #   блоки x_* + pca_00..31 → data/v2/features_ext/
-│   ├── build_features_bgnbd.py    #   BTYD-фичи → data/v2/features_bgnbd/
-│   ├── exp03_hurdle_priors.py     #   приоры хёрдла → reports/
-│   ├── exp06_calibration_indices.py # индексы калибровки → reports/
-│   ├── oof_calibrate.py           #   OOF-калибровка уровня (инструмент exp06)
-│   └── exp1000.py                 #   фабрика параллельных экспериментов (exp09)
-└── archive/                       # закрытые эксперименты — только история:
-    ├── exp01/                     #   оконные агрегаты + CatBoost (1.70261); тут же отчёты exp00
-    ├── exp02/                     #   расширенные фичи + YoY (1.69277); кэш features_exp02
-    ├── exp08/                     #   стек v1 (1.67103) + блочная абляция in-sample
-    ├── exp10..exp12/              #   wave1 (alias b01/b03/b05): калибровки/PLSI/сегменты — rejected
-    ├── exp13/                     #   абляция фичевых блоков (соло 1.67027), alias exp025
-    ├── exp14/                     #   серия гиперпараметров CatBoost (1.70124)
-    ├── exp15/                     #   стек v2 + калибровка — CHAMPION (1.66908)
-    └── exp16/                     #   диагностика accuracy/AUC (скрипт без результатов)
+│   ├── v2/                        #   фичевые датасеты по фолдам (см. v2/MANIFEST.md)
+│   ├── v3/                        #   очищенный датасет 85f (exp19, см. v3/MANIFEST.md)
+│   └── segmented_base/            #   кэш сегментированного пайплайна (игнор)
+├── reports/                       # живые отчёты: EDA + приоры + per-user/segm
+│   ├── figures/                   #   графики (per_user_*.png, exp10_fold_*.png)
+│   └── *.json                     #   dataset_v3, exp10/14, per_user_* итд (ckpt_*/ *.pt игнор)
+├── src/                           # активные инструменты:
+│   ├── eda.py
+│   ├── build_features_ext_pca.py  #   x_* + pca → data/v2/features_ext/
+│   ├── build_features_bgnbd.py    #   BTYD → data/v2/features_bgnbd/
+│   ├── build_dataset_v3.py        #   очистка 141f → 85f → data/v3/
+│   ├── build_segmented_features.py#   segmented: 26 недель + ADI/CV² классы
+│   ├── train_segmented_submit.py  #   иерархия global/class/cluster + blend
+│   ├── train_weekly_transformer.py#   weekly Transformer (26x4) branch
+│   ├── blend_segmented_transformer.py
+│   ├── per_user_full.py           #   exp23 n=3 it20 (1.624)
+│   ├── per_user_full_n5_it25.py   #   exp24 n=5 it25
+│   ├── exp1000.py                 #   фабрика 1006 конфигов (exp09)
+│   └── requirements_*.txt         #   segmented / transformer deps
+└── archive/                       # закрытые эксперименты — история:
+    ├── exp01/                     #   оконные агрегаты + CatBoost (1.70261)
+    ├── exp02/                     #   расширенные фичи + YoY (1.69277)
+    ├── exp08/                     #   стек v1 (1.67103)
+    ├── exp10..exp12/              #   wave1 b01/b03/b05 — rejected
+    ├── exp13/                     #   абляция блоков (1.67027)
+    ├── exp14/                     #   CatBoost гиперы (1.70124)
+    ├── exp15/                     #   стек v2 + калибровка — LB CHAMPION
+    ├── exp16/                     #   диагностика accuracy
+    ├── exp23/                     #   per-user 6h heavy spec (planned)
+    └── exp26_pilots/              #   диагностика per-user/dense/lag/transformer
 ```
 
 Каждый закрытый эксперимент лежит в `archive/expNN/{src,reports,submissions}`.
@@ -117,11 +132,19 @@ ozon/
 # 2) чемпионский стек + сабмит -> submissions/submission_stack_v2*.csv
 .venv/bin/python archive/exp15/src/train_stack_v2.py
 
+# 3) сегментированный пайплайн (CPU) -> submissions/submission_segmented.csv
+bash scripts/run_segmented_pipeline.sh all           # классика, 16 потоков
+# полный ансамбль с Transformer (GPU):
+.venv/bin/python -m pip install -r requirements_transformer.txt
+bash scripts/run_full_segmented_ensemble.sh          # -> submission_segmented_transformer.csv
+
+# 4) per-user персоналка (47 мин на M1, 1.624 CV)
+.venv/bin/python src/per_user_full.py                # n=3 it20
+.venv/bin/python src/per_user_full_n5_it25.py        # n=5 it25
+
 # пример одиночного эксперимента (exp01):
-#   .venv/bin/python archive/exp01/src/features.py     # фичи
-#   .venv/bin/python archive/exp01/src/baselines.py    # наивные референсы
-#   .venv/bin/python archive/exp01/src/train.py        # серия CatBoost
-#   .venv/bin/python archive/exp01/src/submit.py       # сабмит
+#   .venv/bin/python archive/exp01/src/features.py
+#   .venv/bin/python archive/exp01/src/train.py
 ```
 
 Специального железа не требуется: тяжёлые шаги батчируются по 50k юзеров, обучение
