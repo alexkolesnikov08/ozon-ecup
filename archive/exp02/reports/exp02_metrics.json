@@ -1,0 +1,309 @@
+{
+  "versions": {
+    "python": "3.12.14",
+    "polars": "1.43.2",
+    "catboost": "1.2.10",
+    "numpy": "2.5.2",
+    "scikit_learn": "1.9.0",
+    "platform": "macOS-26.6.2-arm64-arm-64bit"
+  },
+  "features": {
+    "blocks": {
+      "ewma": [
+        "ewma_gmv_hl7",
+        "ewma_gmv_hl30",
+        "ewma_to_ord_hl7",
+        "ewma_to_ord_hl30"
+      ],
+      "trend": [
+        "trend_gmv_7v30",
+        "trend_gmv_30v90",
+        "slope_loggmv_60d"
+      ],
+      "conv": [
+        "conv_s2o",
+        "conv_c2o",
+        "conv_o2c"
+      ],
+      "decomp": [
+        "aov_30",
+        "ord_days_30"
+      ],
+      "due": [
+        "due_ratio"
+      ],
+      "shares": [
+        "share_gmv_search_90",
+        "share_gmv_cat_90",
+        "share_gmv_search_trend",
+        "share_gmv_cat_trend"
+      ],
+      "pop": [
+        "pct_rank_gmv30"
+      ]
+    },
+    "configs": {
+      "base": {
+        "blocks": [],
+        "n_features": 56
+      },
+      "base_ewma_trend": {
+        "blocks": [
+          "ewma",
+          "trend"
+        ],
+        "n_features": 63
+      },
+      "base_conv_decomp_due_shares": {
+        "blocks": [
+          "conv",
+          "decomp",
+          "due",
+          "shares"
+        ],
+        "n_features": 66
+      },
+      "full": {
+        "blocks": [
+          "ewma",
+          "trend",
+          "conv",
+          "decomp",
+          "due",
+          "shares",
+          "pop"
+        ],
+        "n_features": 74
+      }
+    },
+    "pct_rank_gmv30_note": "computed at train time on assembled fold: (rank_average(gmv_sum_30d)-1)/(n_users-1), single polars expression",
+    "base_n": 56
+  },
+  "ablation_fold03": [
+    {
+      "config": "base",
+      "n_estimators": 1000,
+      "n_features": 56,
+      "rmsle_fold03": 1.70284,
+      "fit_time_sec": 37.4
+    },
+    {
+      "config": "base_ewma_trend",
+      "n_estimators": 1000,
+      "n_features": 63,
+      "rmsle_fold03": 1.70304,
+      "fit_time_sec": 40.6
+    },
+    {
+      "config": "base_conv_decomp_due_shares",
+      "n_estimators": 1000,
+      "n_features": 66,
+      "rmsle_fold03": 1.69277,
+      "fit_time_sec": 43.0
+    },
+    {
+      "config": "full",
+      "n_estimators": 500,
+      "n_features": 74,
+      "rmsle_fold03": 1.69545,
+      "fit_time_sec": 24.4
+    },
+    {
+      "config": "full",
+      "n_estimators": 1000,
+      "n_features": 74,
+      "rmsle_fold03": 1.69364,
+      "fit_time_sec": 47.7
+    },
+    {
+      "config": "full",
+      "n_estimators": 1500,
+      "n_features": 74,
+      "rmsle_fold03": 1.69302,
+      "fit_time_sec": 62.5
+    }
+  ],
+  "baseline_reproduction": {
+    "exp01_reference": 1.70261,
+    "reproduced": 1.70284,
+    "abs_deviation": 0.00023,
+    "within_tol": true
+  },
+  "lofo": {
+    "description": "train on other 3 folds, validate held-out; configs: base(56) vs base_conv_decomp_due_shares(x1000)",
+    "base": [
+      {
+        "fold": "fold_00",
+        "rmsle": 1.829,
+        "fit_time_sec": 32.9
+      },
+      {
+        "fold": "fold_01",
+        "rmsle": 1.78801,
+        "fit_time_sec": 36.3
+      },
+      {
+        "fold": "fold_02",
+        "rmsle": 1.72102,
+        "fit_time_sec": 35.1
+      },
+      {
+        "fold": "fold_03",
+        "rmsle": 1.70284,
+        "fit_time_sec": 35.2
+      }
+    ],
+    "best": [
+      {
+        "fold": "fold_00",
+        "rmsle": 1.81545,
+        "fit_time_sec": 37.6
+      },
+      {
+        "fold": "fold_01",
+        "rmsle": 1.7742,
+        "fit_time_sec": 40.3
+      },
+      {
+        "fold": "fold_02",
+        "rmsle": 1.7109,
+        "fit_time_sec": 38.4
+      },
+      {
+        "fold": "fold_03",
+        "rmsle": 1.69277,
+        "fit_time_sec": 39.1
+      }
+    ]
+  },
+  "loss_ablation_fold03": [
+    {
+      "loss": "RMSE",
+      "rmsle_fold03": 1.69277,
+      "fit_time_sec": 38.6
+    },
+    {
+      "loss": "MAE",
+      "rmsle_fold03": 1.80181,
+      "fit_time_sec": 67.9
+    },
+    {
+      "loss": "Tweedie:variance_power=1.1",
+      "rmsle_fold03": 1.69287,
+      "fit_time_sec": 42.8
+    },
+    {
+      "loss": "Tweedie:variance_power=1.5",
+      "rmsle_fold03": 1.69339,
+      "fit_time_sec": 44.3
+    },
+    {
+      "loss": "Tweedie:variance_power=1.9",
+      "rmsle_fold03": 1.6951,
+      "fit_time_sec": 44.4
+    }
+  ],
+  "yoy": {
+    "platform_index_definition": "s_hat = sum(gmv[2025-02-14..2025-03-15]) / sum(gmv[2025-01-15..2025-02-13]), all users",
+    "s_hat": 1.162777,
+    "proxy_anchor": "2025-02-14",
+    "beta_grid": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "rmsle_by_beta": [
+      1.85297,
+      1.84728,
+      1.84235,
+      1.83819,
+      1.83478
+    ],
+    "beta_hat": 1.0,
+    "caveats": [
+      "proxy users have only 45 days of history vs production anchors",
+      "weekday alignment differs between 2025 and 2026 windows",
+      "holidays shift relative to weekdays year-to-year",
+      "beta is a directional estimate picked on the proxy, not a guarantee"
+    ],
+    "extended_beta_check": {
+      "script": "archive/exp02/src/exp02_beta_check.py",
+      "grid": [
+        0.0,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        1.0,
+        1.1,
+        1.2,
+        1.3,
+        1.4,
+        1.5
+      ],
+      "rmsle": [
+        1.85297,
+        1.8506,
+        1.84836,
+        1.84624,
+        1.84423,
+        1.84235,
+        1.8406,
+        1.83896,
+        1.83744,
+        1.83605,
+        1.83478,
+        1.83364,
+        1.83262,
+        1.83172,
+        1.83094,
+        1.83029
+      ],
+      "conclusion": "proxy curve is monotone decreasing up to beta=1.5; the optimum lies beyond the spec grid, so beta_hat=1.0 (grid argmin) is a conservative lower-bound choice; calibration magnitude is not identifiable from the proxy"
+    }
+  },
+  "decision": {
+    "feature_config": "base_conv_decomp_due_shares",
+    "blocks": [
+      "conv",
+      "decomp",
+      "due",
+      "shares"
+    ],
+    "n_features": 66,
+    "n_estimators": 1000,
+    "loss": "RMSE",
+    "beta": 1.0,
+    "s_hat": 1.162777
+  },
+  "best_combo_fold03_rmsle": 1.69277,
+  "runtime_train_sec": 831.3,
+  "submission": {
+    "path": "archive/exp02/submissions/submission_exp02.csv",
+    "config": "base_conv_decomp_due_shares",
+    "n_features": 66,
+    "n_estimators": 1000,
+    "loss": "RMSE",
+    "beta": 1.0,
+    "s_hat": 1.162777,
+    "fit_time_sec": 49.5,
+    "refit_rmsle_fold03": 1.67165,
+    "exp01_refit_rmsle_fold03": 1.68125,
+    "pred_mean": 39.5515,
+    "pred_median": 8.0271,
+    "pred_min": 0.0,
+    "pred_max": 5156.36,
+    "rows": 250000,
+    "columns": [
+      "user_id",
+      "predict"
+    ]
+  }
+}

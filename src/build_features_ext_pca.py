@@ -1,3 +1,5 @@
+# Ported verbatim from teammate repo (github.com/Rafaildavar/ozon-ecup), 2026-08-24,
+# for exp02.5 honest block ablation; paths are repo-root relative.
 """Feature construction v2: exp01 base + extended (intent/EWMA/trend/frequency)
 + PCA over dense daily panels (exp02 + exp07).
 

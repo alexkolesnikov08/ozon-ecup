@@ -1,3 +1,5 @@
+# Ported verbatim from teammate repo (github.com/Rafaildavar/ozon-ecup), 2026-08-24,
+# for exp02.5 honest block ablation; paths are repo-root relative.
 """Probabilistic BTYD features per anchor (exp04): BG/NBD + Gamma-Gamma + EB.
 
 Fits on TRAIN folds only (fold_00..02, pre-anchor windows), then produces

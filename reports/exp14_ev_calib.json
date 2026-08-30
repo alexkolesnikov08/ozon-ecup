@@ -1,0 +1,169 @@
+{
+  "protocol": "LOFO OOF 00..02 (clf P(buy) + cat-on-buyers E[z|buy]) | corrections fit inner=fold_02 | transfer check fold_03 | final refit pooled OOF -> fold_end submission",
+  "baseline": "single CatBoost exp01-config on base+ext+pca (LB 1.66035, local fold_03 1.64487)",
+  "stage1": {
+    "model": "CatBoostClassifier(Logloss, eval_metric=AUC)",
+    "selection_metric": "Gini = 2*AUC - 1",
+    "params": {
+      "iterations": 300,
+      "learning_rate": 0.05,
+      "depth": 6,
+      "l2_leaf_reg": 3
+    },
+    "tune_table_inner": {
+      "{\"iterations\": 300, \"learning_rate\": 0.05, \"depth\": 6, \"l2_leaf_reg\": 3}": 0.70017
+    },
+    "gini_fold03": 0.71129,
+    "mean_p_fold03": 0.5479,
+    "buy_share_fold03": 0.5407
+  },
+  "quick": true,
+  "stability_median_pct": {
+    "h1_bins=5": 28.29,
+    "h1_bins=10": 28.46,
+    "h1_bins=20": 28.71,
+    "h2_segments": 28.73
+  },
+  "h2_segment_factors_inner": {
+    "14-30d|s=0": {
+      "n": 104,
+      "k": 1.4547
+    },
+    "14-30d|s=2-4": {
+      "n": 2250,
+      "k": 1.605
+    },
+    "14-30d|s=5-12": {
+      "n": 7831,
+      "k": 1.6088
+    },
+    "14-30d|s>=12": {
+      "n": 17419,
+      "k": 1.4833
+    },
+    "30-90d|s=0": {
+      "n": 2516,
+      "k": 1.6022
+    },
+    "30-90d|s=2-4": {
+      "n": 4774,
+      "k": 1.6756
+    },
+    "30-90d|s=5-12": {
+      "n": 7729,
+      "k": 1.6921
+    },
+    "30-90d|s>=12": {
+      "n": 8097,
+      "k": 1.653
+    },
+    "7-14d|s=0": {
+      "n": 138,
+      "k": 1.387
+    },
+    "7-14d|s=2-4": {
+      "n": 2078,
+      "k": 1.748
+    },
+    "7-14d|s=5-12": {
+      "n": 9621,
+      "k": 1.5338
+    },
+    "7-14d|s>=12": {
+      "n": 43278,
+      "k": 1.3394
+    },
+    ">90d|s=0": {
+      "n": 4575,
+      "k": 1.8532
+    },
+    ">90d|s=2-4": {
+      "n": 6619,
+      "k": 1.8225
+    },
+    ">90d|s=5-12": {
+      "n": 7861,
+      "k": 1.756
+    },
+    ">90d|s>=12": {
+      "n": 5340,
+      "k": 1.8407
+    },
+    "never|s=0": {
+      "n": 1110,
+      "k": 1.8212
+    },
+    "never|s=2-4": {
+      "n": 1049,
+      "k": 1.8354
+    },
+    "never|s=5-12": {
+      "n": 931,
+      "k": 1.754
+    },
+    "never|s>=12": {
+      "n": 566,
+      "k": 1.7293
+    }
+  },
+  "inner_table": {
+    "base": {
+      "rmsle": 2.06904,
+      "rev_err_pct": -29.99
+    },
+    "h1_bins=5": {
+      "rmsle": 2.36658,
+      "rev_err_pct": 4.05
+    },
+    "h1_bins=10": {
+      "rmsle": 2.36718,
+      "rev_err_pct": 3.82
+    },
+    "h1_bins=20": {
+      "rmsle": 2.36106,
+      "rev_err_pct": 3.44
+    },
+    "h2_segments": {
+      "rmsle": 2.35907,
+      "rev_err_pct": 2.79
+    }
+  },
+  "chosen_by_abs_rev_err_inner": "h2_segments",
+  "fold03_table": {
+    "base": {
+      "rmsle": 1.96381,
+      "rev_err_pct": -41.07
+    },
+    "h1_bins=5": {
+      "rmsle": 2.23779,
+      "rev_err_pct": -11.1
+    },
+    "h1_bins=10": {
+      "rmsle": 2.23551,
+      "rev_err_pct": -11.3
+    },
+    "h1_bins=20": {
+      "rmsle": 2.22903,
+      "rev_err_pct": -11.67
+    },
+    "h2_segments": {
+      "rmsle": 2.2312,
+      "rev_err_pct": -12.7
+    },
+    "ref_single_bl": {
+      "rmsle": 1.67361,
+      "rev_err_pct": -57.75
+    }
+  },
+  "fold03_pooled_refit_chosen": {
+    "rmsle": 2.37142,
+    "rev_err_pct": 9.87
+  },
+  "submission": {
+    "file": "submissions/submission_hurdle_bl_ev.csv",
+    "variant": "h2_segments",
+    "pred_mean": 92.27,
+    "pred_sum_mln": 23.07
+  },
+  "runtime_min": 11.5
+}
