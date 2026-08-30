@@ -57,7 +57,7 @@ Time-CV: якоря fold_00..03 = `2025-12-03 / 12-17 / 12-31 / 2026-01-14` с �
 | **23** | **Per-user CatBoost n=3 it20 (47 мин)** | **1.62463** | **CV champion (LB 1.686)** |
 | 24 | Per-user n=5 it25 dense (1k pilot) | 1.63498 | done |
 | 25 | Heavy 6h per-user n=3 it50 (planned) | 1.638 (1k) | planned |
-| 26 | Segmented LTV + Transformer blend (PR #5) | 1.675 (quick) | done |
+| 26 | Segmented LTV + Transformer blend (PR #5) | **1.66916** (full 1M rows) | done |
 | 26p | Pilots per-user/dense/lag/transformer | — | archive |
 
 Дальше: стабилизация per-user (blend 0.5 → LB 1.66) + segmented ансамбль на CPU/GPU.
