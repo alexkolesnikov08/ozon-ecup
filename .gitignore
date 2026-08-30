@@ -3,6 +3,9 @@ data/*.parquet
 *.parquet
 data/v2/*
 !data/v2/MANIFEST.md
+data/segmented_base/*
+data/segmented_predictions/*
+models/segmented_transformer/*
 
 # python
 __pycache__/

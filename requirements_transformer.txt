@@ -1,0 +1,2 @@
+-r requirements_segmented.txt
+torch>=2.2
