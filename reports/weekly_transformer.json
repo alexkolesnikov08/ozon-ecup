@@ -1,0 +1,138 @@
+{
+  "source": "weekly sequences derived directly from data/train.parquet",
+  "sequence": {
+    "weeks": 26,
+    "channels": [
+      "gmv",
+      "to_ord",
+      "searches",
+      "to_cart"
+    ]
+  },
+  "static_features": [
+    "adi_26w",
+    "cv2_demand_26w",
+    "demand_weeks_26w",
+    "zero_week_share_26w",
+    "positive_week_gmv_mean_26w",
+    "weekly_gmv_mean_26w",
+    "weekly_gmv_max_26w",
+    "gmv_sum_7d",
+    "gmv_sum_30d",
+    "gmv_sum_90d",
+    "gmv_sum_180d",
+    "searches_sum_7d",
+    "searches_sum_30d",
+    "searches_sum_90d",
+    "to_ord_sum_7d",
+    "to_ord_sum_30d",
+    "to_ord_sum_90d",
+    "to_cart_sum_30d",
+    "recency_gmv_days",
+    "recency_order_days",
+    "recency_search_days",
+    "recency_cart_days",
+    "tenure_days",
+    "gmv_lifetime",
+    "orders_lifetime",
+    "gmv_recent_share_7_30",
+    "gmv_recent_share_30_90",
+    "search_recent_share_7_30",
+    "conv_order_per_search_90d",
+    "conv_cart_per_search_90d",
+    "conv_order_per_cart_90d",
+    "gmv_per_order_90d"
+  ],
+  "parameters": {
+    "device": "mps",
+    "epochs": 12,
+    "batch_size": 4096,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.001,
+    "d_model": 64,
+    "layers": 2,
+    "heads": 4,
+    "dropout": 0.1,
+    "seed": 42,
+    "quick": false
+  },
+  "stages": {
+    "fold_02": {
+      "train_folds": [
+        "fold_00",
+        "fold_01"
+      ],
+      "eval_fold": "fold_02",
+      "train_rows": 500000,
+      "eval_rows": 250000,
+      "epoch_train_rmse": [
+        1.924967,
+        1.765225,
+        1.760144,
+        1.757382,
+        1.755856,
+        1.755194,
+        1.75499,
+        1.754281,
+        1.753847,
+        1.753465,
+        1.753325,
+        1.753253
+      ],
+      "seconds": 332.0,
+      "rmsle": 1.716004
+    },
+    "fold_03": {
+      "train_folds": [
+        "fold_00",
+        "fold_01",
+        "fold_02"
+      ],
+      "eval_fold": "fold_03",
+      "train_rows": 750000,
+      "eval_rows": 250000,
+      "epoch_train_rmse": [
+        1.84798,
+        1.747052,
+        1.743516,
+        1.741247,
+        1.740842,
+        1.739655,
+        1.739057,
+        1.738405,
+        1.738089,
+        1.737564,
+        1.737529,
+        1.737489
+      ],
+      "seconds": 494.9,
+      "rmsle": 1.682421
+    },
+    "fold_end": {
+      "train_folds": [
+        "fold_00",
+        "fold_01",
+        "fold_02",
+        "fold_03"
+      ],
+      "eval_fold": "fold_end",
+      "train_rows": 1000000,
+      "eval_rows": 250000,
+      "epoch_train_rmse": [
+        1.837821,
+        1.731887,
+        1.728686,
+        1.727229,
+        1.725819,
+        1.725357,
+        1.724408,
+        1.72411,
+        1.723664,
+        1.723504,
+        1.723109,
+        1.722745
+      ],
+      "seconds": 662.7
+    }
+  }
+}

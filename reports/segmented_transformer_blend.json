@@ -1,0 +1,115 @@
+{
+  "protocol": {
+    "tuning": "fold_02",
+    "honest_holdout": "fold_03",
+    "final": "fold_end",
+    "space": "z=log1p(target)"
+  },
+  "branch_metadata": {
+    "classical": {
+      "quick": false,
+      "selected_variant": "blend",
+      "holdout_scores": {
+        "global": 1.669354,
+        "class": 1.671454,
+        "cluster": 1.673534,
+        "blend": 1.669163
+      },
+      "feature_source": "data/segmented_base"
+    },
+    "transformer": {
+      "device": "mps",
+      "epochs": 12,
+      "batch_size": 4096,
+      "learning_rate": 0.0003,
+      "weight_decay": 0.001,
+      "d_model": 64,
+      "layers": 2,
+      "heads": 4,
+      "dropout": 0.1,
+      "seed": 42,
+      "quick": false
+    }
+  },
+  "weights": {
+    "overall": {
+      "transformer_weight": 0.0,
+      "classical_weight": 1.0,
+      "shift": -0.08,
+      "zero_threshold": 0.0,
+      "inner_rmsle": 1.69183,
+      "rows": 250000
+    },
+    "per_class": {
+      "0": {
+        "transformer_weight": 0.0,
+        "classical_weight": 1.0,
+        "shift": -0.08,
+        "zero_threshold": 0.0,
+        "inner_rmsle": 1.69183,
+        "rows": 250000,
+        "fallback": "overall"
+      },
+      "1": {
+        "transformer_weight": 0.15000000000000002,
+        "classical_weight": 0.85,
+        "shift": -0.08,
+        "zero_threshold": 0.0,
+        "inner_rmsle": 1.068142,
+        "rows": 11270
+      },
+      "2": {
+        "transformer_weight": 0.0,
+        "classical_weight": 1.0,
+        "shift": -0.08,
+        "zero_threshold": 0.0,
+        "inner_rmsle": 1.563643,
+        "rows": 117956
+      },
+      "3": {
+        "transformer_weight": 0.0,
+        "classical_weight": 1.0,
+        "shift": -0.08,
+        "zero_threshold": 0.5,
+        "inner_rmsle": 1.858046,
+        "rows": 119768
+      }
+    }
+  },
+  "inner_scores": {
+    "classical": 1.696825,
+    "transformer": 1.716004,
+    "blend": 1.691818
+  },
+  "holdout_scores": {
+    "classical": 1.669163,
+    "transformer": 1.682421,
+    "blend": 1.672764
+  },
+  "holdout_blend_by_class": {
+    "smooth": {
+      "rows": 975,
+      "rmsle": 0.870604
+    },
+    "erratic": {
+      "rows": 11547,
+      "rmsle": 1.068382
+    },
+    "intermittent": {
+      "rows": 116493,
+      "rmsle": 1.54239
+    },
+    "lumpy": {
+      "rows": 120985,
+      "rmsle": 1.837474
+    }
+  },
+  "selected_variant": "classical",
+  "submission": {
+    "path": "submissions/submission_segmented_transformer.csv",
+    "rows": 250000,
+    "mean": 33.593312,
+    "median": 6.124575,
+    "zeros_share": 0.004236
+  }
+}

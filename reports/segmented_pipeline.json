@@ -1,0 +1,513 @@
+{
+  "protocol": {
+    "inner": "fold_00+fold_01 -> fold_02 (blend tuning)",
+    "holdout": "fold_00+fold_01+fold_02 -> fold_03",
+    "final": "fold_00+fold_01+fold_02+fold_03 -> fold_end",
+    "metric": "RMSLE = RMSE in log1p target space",
+    "source": "base data/train.parquet via data/segmented_base; no v2/v3 dependency"
+  },
+  "parameters": {
+    "clusters_per_class": 3,
+    "min_local_rows": 2500,
+    "min_hist_rows": 15000,
+    "min_cat_rows": 100000,
+    "global_iters": 1000,
+    "local_iters": 500,
+    "hist_iters": 300,
+    "seed": 42,
+    "quick": false
+  },
+  "blend": {
+    "overall": {
+      "weights": {
+        "global": 0.6,
+        "class": 0.2,
+        "cluster": 0.2
+      },
+      "shift": -0.08,
+      "zero_threshold": 0.0,
+      "inner_rmsle": 1.696876,
+      "rows": 250000
+    },
+    "per_class": {
+      "0": {
+        "weights": {
+          "global": 0.6,
+          "class": 0.2,
+          "cluster": 0.2
+        },
+        "shift": -0.08,
+        "zero_threshold": 0.0,
+        "inner_rmsle": 1.696876,
+        "rows": 250000,
+        "fallback": "overall"
+      },
+      "1": {
+        "weights": {
+          "global": 0.6,
+          "class": 0.3,
+          "cluster": 0.1
+        },
+        "shift": -0.08,
+        "zero_threshold": 0.0,
+        "inner_rmsle": 1.071552,
+        "rows": 11270
+      },
+      "2": {
+        "weights": {
+          "global": 0.6,
+          "class": 0.3,
+          "cluster": 0.1
+        },
+        "shift": -0.08,
+        "zero_threshold": 0.0,
+        "inner_rmsle": 1.566347,
+        "rows": 117956
+      },
+      "3": {
+        "weights": {
+          "global": 0.6,
+          "class": 0.1,
+          "cluster": 0.3
+        },
+        "shift": -0.08,
+        "zero_threshold": 0.0,
+        "inner_rmsle": 1.865118,
+        "rows": 119768
+      }
+    }
+  },
+  "inner": {
+    "train_rows": 500000,
+    "eval_rows": 250000,
+    "feature_count": 206,
+    "class_counts_train": {
+      "0": 1917,
+      "1": 20803,
+      "2": 245028,
+      "3": 232252
+    },
+    "class_counts_eval": {
+      "0": 1006,
+      "1": 11270,
+      "2": 117956,
+      "3": 119768
+    },
+    "cluster_counts_train": {
+      "0": 1917,
+      "3": 7909,
+      "4": 5626,
+      "5": 7268,
+      "6": 145435,
+      "7": 27975,
+      "8": 71618,
+      "9": 72166,
+      "10": 82865,
+      "11": 77221
+    },
+    "cluster_counts_eval": {
+      "0": 1006,
+      "3": 4240,
+      "4": 3582,
+      "5": 3448,
+      "6": 68256,
+      "7": 12346,
+      "8": 37354,
+      "9": 36853,
+      "10": 43889,
+      "11": 39026
+    },
+    "class_models": {
+      "0": {
+        "name": "smooth",
+        "train_rows": 1917,
+        "eval_rows": 1006,
+        "model": "global_fallback"
+      },
+      "1": {
+        "name": "erratic",
+        "train_rows": 20803,
+        "eval_rows": 11270,
+        "model": "hist_gbdt"
+      },
+      "2": {
+        "name": "intermittent",
+        "train_rows": 245028,
+        "eval_rows": 117956,
+        "model": "catboost"
+      },
+      "3": {
+        "name": "lumpy",
+        "train_rows": 232252,
+        "eval_rows": 119768,
+        "model": "catboost"
+      }
+    },
+    "cluster_models": {
+      "0": {
+        "class_id": 0,
+        "train_rows": 1917,
+        "eval_rows": 1006,
+        "model": "class_fallback"
+      },
+      "3": {
+        "class_id": 1,
+        "train_rows": 7909,
+        "eval_rows": 4240,
+        "model": "ridge"
+      },
+      "4": {
+        "class_id": 1,
+        "train_rows": 5626,
+        "eval_rows": 3582,
+        "model": "ridge"
+      },
+      "5": {
+        "class_id": 1,
+        "train_rows": 7268,
+        "eval_rows": 3448,
+        "model": "ridge"
+      },
+      "6": {
+        "class_id": 2,
+        "train_rows": 145435,
+        "eval_rows": 68256,
+        "model": "catboost"
+      },
+      "7": {
+        "class_id": 2,
+        "train_rows": 27975,
+        "eval_rows": 12346,
+        "model": "hist_gbdt"
+      },
+      "8": {
+        "class_id": 2,
+        "train_rows": 71618,
+        "eval_rows": 37354,
+        "model": "hist_gbdt"
+      },
+      "9": {
+        "class_id": 3,
+        "train_rows": 72166,
+        "eval_rows": 36853,
+        "model": "hist_gbdt"
+      },
+      "10": {
+        "class_id": 3,
+        "train_rows": 82865,
+        "eval_rows": 43889,
+        "model": "hist_gbdt"
+      },
+      "11": {
+        "class_id": 3,
+        "train_rows": 77221,
+        "eval_rows": 39026,
+        "model": "hist_gbdt"
+      }
+    },
+    "seconds": 165.5,
+    "scores": {
+      "global": 1.706312,
+      "class": 1.707479,
+      "cluster": 1.710813,
+      "blend": 1.696825
+    }
+  },
+  "holdout": {
+    "train_rows": 750000,
+    "eval_rows": 250000,
+    "feature_count": 206,
+    "class_counts_train": {
+      "0": 2923,
+      "1": 32073,
+      "2": 362984,
+      "3": 352020
+    },
+    "class_counts_eval": {
+      "0": 975,
+      "1": 11547,
+      "2": 116493,
+      "3": 120985
+    },
+    "cluster_counts_train": {
+      "0": 2923,
+      "3": 8661,
+      "4": 11191,
+      "5": 12221,
+      "6": 213896,
+      "7": 40315,
+      "8": 108773,
+      "9": 131040,
+      "10": 107689,
+      "11": 113291
+    },
+    "cluster_counts_eval": {
+      "0": 975,
+      "3": 3012,
+      "4": 4339,
+      "5": 4196,
+      "6": 67507,
+      "7": 11128,
+      "8": 37858,
+      "9": 46121,
+      "10": 40400,
+      "11": 34464
+    },
+    "class_models": {
+      "0": {
+        "name": "smooth",
+        "train_rows": 2923,
+        "eval_rows": 975,
+        "model": "ridge"
+      },
+      "1": {
+        "name": "erratic",
+        "train_rows": 32073,
+        "eval_rows": 11547,
+        "model": "hist_gbdt"
+      },
+      "2": {
+        "name": "intermittent",
+        "train_rows": 362984,
+        "eval_rows": 116493,
+        "model": "catboost"
+      },
+      "3": {
+        "name": "lumpy",
+        "train_rows": 352020,
+        "eval_rows": 120985,
+        "model": "catboost"
+      }
+    },
+    "cluster_models": {
+      "0": {
+        "class_id": 0,
+        "train_rows": 2923,
+        "eval_rows": 975,
+        "model": "ridge"
+      },
+      "3": {
+        "class_id": 1,
+        "train_rows": 8661,
+        "eval_rows": 3012,
+        "model": "ridge"
+      },
+      "4": {
+        "class_id": 1,
+        "train_rows": 11191,
+        "eval_rows": 4339,
+        "model": "ridge"
+      },
+      "5": {
+        "class_id": 1,
+        "train_rows": 12221,
+        "eval_rows": 4196,
+        "model": "ridge"
+      },
+      "6": {
+        "class_id": 2,
+        "train_rows": 213896,
+        "eval_rows": 67507,
+        "model": "catboost"
+      },
+      "7": {
+        "class_id": 2,
+        "train_rows": 40315,
+        "eval_rows": 11128,
+        "model": "hist_gbdt"
+      },
+      "8": {
+        "class_id": 2,
+        "train_rows": 108773,
+        "eval_rows": 37858,
+        "model": "catboost"
+      },
+      "9": {
+        "class_id": 3,
+        "train_rows": 131040,
+        "eval_rows": 46121,
+        "model": "catboost"
+      },
+      "10": {
+        "class_id": 3,
+        "train_rows": 107689,
+        "eval_rows": 40400,
+        "model": "catboost"
+      },
+      "11": {
+        "class_id": 3,
+        "train_rows": 113291,
+        "eval_rows": 34464,
+        "model": "catboost"
+      }
+    },
+    "seconds": 231.9,
+    "scores": {
+      "global": 1.669354,
+      "class": 1.671454,
+      "cluster": 1.673534,
+      "blend": 1.669163
+    },
+    "blend_class_scores": {
+      "smooth": {
+        "rows": 975,
+        "rmsle": 0.857234,
+        "buy_rate": 0.991795
+      },
+      "erratic": {
+        "rows": 11547,
+        "rmsle": 1.06624,
+        "buy_rate": 0.987269
+      },
+      "intermittent": {
+        "rows": 116493,
+        "rmsle": 1.53938,
+        "buy_rate": 0.317058
+      },
+      "lumpy": {
+        "rows": 120985,
+        "rmsle": 1.833302,
+        "buy_rate": 0.7097
+      }
+    }
+  },
+  "selected_variant": "blend",
+  "final": {
+    "train_rows": 1000000,
+    "eval_rows": 250000,
+    "feature_count": 206,
+    "class_counts_train": {
+      "0": 3898,
+      "1": 43620,
+      "2": 479477,
+      "3": 473005
+    },
+    "class_counts_eval": {
+      "0": 1042,
+      "1": 12296,
+      "2": 113619,
+      "3": 123043
+    },
+    "cluster_counts_train": {
+      "0": 3898,
+      "3": 12401,
+      "4": 19023,
+      "5": 12196,
+      "6": 263925,
+      "7": 57209,
+      "8": 158343,
+      "9": 148954,
+      "10": 183087,
+      "11": 140964
+    },
+    "cluster_counts_eval": {
+      "0": 1042,
+      "3": 4229,
+      "4": 5043,
+      "5": 3024,
+      "6": 61933,
+      "7": 12305,
+      "8": 39381,
+      "9": 38285,
+      "10": 51076,
+      "11": 33682
+    },
+    "class_models": {
+      "0": {
+        "name": "smooth",
+        "train_rows": 3898,
+        "eval_rows": 1042,
+        "model": "ridge"
+      },
+      "1": {
+        "name": "erratic",
+        "train_rows": 43620,
+        "eval_rows": 12296,
+        "model": "hist_gbdt"
+      },
+      "2": {
+        "name": "intermittent",
+        "train_rows": 479477,
+        "eval_rows": 113619,
+        "model": "catboost"
+      },
+      "3": {
+        "name": "lumpy",
+        "train_rows": 473005,
+        "eval_rows": 123043,
+        "model": "catboost"
+      }
+    },
+    "cluster_models": {
+      "0": {
+        "class_id": 0,
+        "train_rows": 3898,
+        "eval_rows": 1042,
+        "model": "ridge"
+      },
+      "3": {
+        "class_id": 1,
+        "train_rows": 12401,
+        "eval_rows": 4229,
+        "model": "ridge"
+      },
+      "4": {
+        "class_id": 1,
+        "train_rows": 19023,
+        "eval_rows": 5043,
+        "model": "hist_gbdt"
+      },
+      "5": {
+        "class_id": 1,
+        "train_rows": 12196,
+        "eval_rows": 3024,
+        "model": "ridge"
+      },
+      "6": {
+        "class_id": 2,
+        "train_rows": 263925,
+        "eval_rows": 61933,
+        "model": "catboost"
+      },
+      "7": {
+        "class_id": 2,
+        "train_rows": 57209,
+        "eval_rows": 12305,
+        "model": "hist_gbdt"
+      },
+      "8": {
+        "class_id": 2,
+        "train_rows": 158343,
+        "eval_rows": 39381,
+        "model": "catboost"
+      },
+      "9": {
+        "class_id": 3,
+        "train_rows": 148954,
+        "eval_rows": 38285,
+        "model": "catboost"
+      },
+      "10": {
+        "class_id": 3,
+        "train_rows": 183087,
+        "eval_rows": 51076,
+        "model": "catboost"
+      },
+      "11": {
+        "class_id": 3,
+        "train_rows": 140964,
+        "eval_rows": 33682,
+        "model": "catboost"
+      }
+    },
+    "seconds": 291.9
+  },
+  "submission": {
+    "path": "submissions/submission_segmented.csv",
+    "rows": 250000,
+    "mean": 33.593312,
+    "median": 6.124575,
+    "zeros_share": 0.004236
+  },
+  "total_seconds": 698.7
+}
