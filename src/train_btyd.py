@@ -37,17 +37,18 @@ import gc
 import json
 import time
 import warnings
-from pathlib import Path
 
 import lightgbm as lgb
 import numpy as np
 import pandas as pd
 from lifetimes import BetaGeoFitter, GammaGammaFitter
 
-DATA_PATH = Path("data/train.parquet")
-SAMPLE_PATH = Path("sample_submit.csv")
-OUT_DIR = Path("submissions")
-REPORT_DIR = Path("reports")
+from common.paths import REPORTS_DIR, SAMPLE_SUBMIT, SUBMISSIONS_DIR, TRAIN_PARQUET
+
+DATA_PATH = TRAIN_PARQUET
+SAMPLE_PATH = SAMPLE_SUBMIT
+OUT_DIR = SUBMISSIONS_DIR
+REPORT_DIR = REPORTS_DIR
 
 DATE_COL_CANDIDATES = ("event_date", "date")
 CART_COL_CANDIDATES = ("to_cart", "cart_adds")
@@ -235,7 +236,7 @@ def btyd_scores(summary: pd.DataFrame) -> tuple[np.ndarray, np.ndarray, np.ndarr
     freq = summary["frequency"].to_numpy(dtype=np.float64)
     rec = summary["recency"].to_numpy(dtype=np.float64)
     t = summary["T"].to_numpy(dtype=np.float64)
-    mon = summary["monetary_value"].to_numpy(dtype=np.float64)
+    _mon = summary["monetary_value"].to_numpy(dtype=np.float64)
     has_buy = summary["has_buy"].to_numpy(dtype=bool)
 
     with warnings.catch_warnings():

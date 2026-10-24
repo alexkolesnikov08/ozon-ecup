@@ -32,14 +32,14 @@
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install --upgrade pip
-.venv/bin/python -m pip install -r requirements_segmented.txt
+.venv/bin/python -m pip install -r requirements/base.txt
 ```
 
 Для полного ансамбля с Transformer дополнительно установите PyTorch. На CUDA-сервере
 лучше взять команду установки под его версию CUDA с сайта PyTorch; универсальный вариант:
 
 ```bash
-.venv/bin/python -m pip install -r requirements_transformer.txt
+.venv/bin/python -m pip install -r requirements/transformer.txt
 ```
 
 Проверьте наличие входов:
@@ -57,13 +57,13 @@ ls -lh data/train.parquet sample_submit.csv
 затрагивая полные признаки:
 
 ```bash
-.venv/bin/python src/build_segmented_features.py \
+.venv/bin/python archive/exp26/src/build_segmented_features.py \
   --out-dir /tmp/segmented_smoke \
   --limit-users 10000 \
   --batch-size 5000 \
   --overwrite
 
-.venv/bin/python src/train_segmented_submit.py \
+.venv/bin/python archive/exp26/src/train_segmented_submit.py \
   --features-dir /tmp/segmented_smoke \
   --sample /tmp/segmented_smoke/sample_submit_smoke.csv \
   --submission /tmp/segmented_smoke/submission.csv \
@@ -80,7 +80,7 @@ ls -lh data/train.parquet sample_submit.csv
 ## 3. Классическая ветка одной командой
 
 ```bash
-bash scripts/run_segmented_pipeline.sh all
+bash archive/exp26/scripts/run_segmented_pipeline.sh all
 ```
 
 По умолчанию используются 16 потоков и батчи по 50 000 пользователей. Настройка для
@@ -88,26 +88,26 @@ bash scripts/run_segmented_pipeline.sh all
 
 ```bash
 SEGMENTED_THREADS=24 SEGMENTED_BATCH_SIZE=50000 \
-  bash scripts/run_segmented_pipeline.sh all
+  bash archive/exp26/scripts/run_segmented_pipeline.sh all
 ```
 
-Этот вариант уже создаёт готовый `submissions/submission_segmented.csv` и подходит для
+Этот вариант уже создаёт готовый `archive/exp26/submissions/submission_segmented.csv` и подходит для
 CPU-сервера.
 
 ## 4. Полный ансамбль с Transformer
 
-После установки `requirements_transformer.txt`:
+После установки `requirements/transformer.txt`:
 
 ```bash
 SEGMENTED_THREADS=24 SEGMENTED_DEVICE=cuda SEGMENTED_EPOCHS=12 \
-  bash scripts/run_full_segmented_ensemble.sh
+  bash archive/exp26/scripts/run_full_segmented_ensemble.sh
 ```
 
 Скрипт последовательно строит признаки, обучает классическую и Transformer-ветки,
 подбирает их мета-бленд на `fold_02`, проверяет на `fold_03` и создаёт:
 
 ```text
-submissions/submission_segmented_transformer.csv
+archive/exp26/submissions/submission_segmented_transformer.csv
 ```
 
 Если GPU отсутствует, используйте `SEGMENTED_DEVICE=cpu`; это существенно дольше. Для
@@ -115,14 +115,14 @@ submissions/submission_segmented_transformer.csv
 
 ```bash
 SEGMENTED_QUICK=1 SEGMENTED_DEVICE=cuda \
-  bash scripts/run_full_segmented_ensemble.sh
+  bash archive/exp26/scripts/run_full_segmented_ensemble.sh
 ```
 
 Если процесс запускается по SSH, используйте `tmux`, чтобы он пережил разрыв соединения:
 
 ```bash
 tmux new -s ozon-ltv
-SEGMENTED_THREADS=24 bash scripts/run_segmented_pipeline.sh all
+SEGMENTED_THREADS=24 bash archive/exp26/scripts/run_segmented_pipeline.sh all
 ```
 
 Отсоединиться от `tmux`: `Ctrl-b`, затем `d`. Вернуться: `tmux attach -t ozon-ltv`.
@@ -132,25 +132,25 @@ SEGMENTED_THREADS=24 bash scripts/run_segmented_pipeline.sh all
 Только построение признаков:
 
 ```bash
-bash scripts/run_segmented_pipeline.sh features
+bash archive/exp26/scripts/run_segmented_pipeline.sh features
 ```
 
 Только обучение, если `data/segmented_base/fold_*.parquet` уже готовы:
 
 ```bash
-bash scripts/run_segmented_pipeline.sh train
+bash archive/exp26/scripts/run_segmented_pipeline.sh train
 ```
 
 Готовые валидные фолды автоматически переиспользуются. Чтобы принудительно перестроить их:
 
 ```bash
-SEGMENTED_OVERWRITE=1 bash scripts/run_segmented_pipeline.sh features
+SEGMENTED_OVERWRITE=1 bash archive/exp26/scripts/run_segmented_pipeline.sh features
 ```
 
 Быстрый полный прогон с уменьшенным числом итераций моделей:
 
 ```bash
-SEGMENTED_QUICK=1 bash scripts/run_segmented_pipeline.sh all
+SEGMENTED_QUICK=1 bash archive/exp26/scripts/run_segmented_pipeline.sh all
 ```
 
 `SEGMENTED_QUICK=1` нужен для проверки инфраструктуры, а не для финальной отправки.
@@ -159,12 +159,12 @@ SEGMENTED_QUICK=1 bash scripts/run_segmented_pipeline.sh all
 
 После полного запуска:
 
-- `submissions/submission_segmented.csv` — готовый файл для отправки;
-- `submissions/submission_segmented_transformer.csv` — итог полного ансамбля; внутри
+- `archive/exp26/submissions/submission_segmented.csv` — готовый файл для отправки;
+- `archive/exp26/submissions/submission_segmented_transformer.csv` — итог полного ансамбля; внутри
   автоматически выбран лучший по `fold_03` вариант: classical, Transformer или blend;
-- `reports/segmented_pipeline.json` — RMSLE моделей на временных фолдах, выбранный
+- `archive/exp26/reports/segmented_pipeline.json` — RMSLE моделей на временных фолдах, выбранный
   вариант, веса бленда, размеры классов/кластеров и тип модели каждой группы;
-- `reports/weekly_transformer.json` и `reports/segmented_transformer_blend.json` —
+- `archive/exp26/reports/weekly_transformer.json` и `archive/exp26/reports/segmented_transformer_blend.json` —
   метрики sequence-модели и финального мета-бленда;
 - `data/segmented_base/manifest.json` — схема построенных данных и распределение четырёх
   типов временных рядов;
@@ -178,7 +178,7 @@ import polars as pl
 
 sample = pl.read_csv("sample_submit.csv")
 # Для классической ветки замените имя на submission_segmented.csv.
-sub = pl.read_csv("submissions/submission_segmented_transformer.csv")
+sub = pl.read_csv("archive/exp26/submissions/submission_segmented_transformer.csv")
 assert sub.columns == ["user_id", "predict"]
 assert sub.height == sample.height
 assert sub["user_id"].to_list() == sample["user_id"].to_list()
@@ -189,15 +189,15 @@ print(sub.select("predict").describe())
 PY
 ```
 
-После полного запуска используйте `submissions/submission_segmented_transformer.csv`.
-После запуска только классической ветки — `submissions/submission_segmented.csv`.
+После полного запуска используйте `archive/exp26/submissions/submission_segmented_transformer.csv`.
+После запуска только классической ветки — `archive/exp26/submissions/submission_segmented.csv`.
 
 ## 7. Полезные параметры
 
 Прямой запуск обучающего скрипта позволяет менять вычислительный бюджет:
 
 ```bash
-.venv/bin/python src/train_segmented_submit.py \
+.venv/bin/python archive/exp26/src/train_segmented_submit.py \
   --threads 24 \
   --clusters-per-class 3 \
   --global-iters 1000 \

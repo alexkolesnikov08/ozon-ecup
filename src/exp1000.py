@@ -39,18 +39,24 @@ import itertools
 import json
 import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
-from pathlib import Path
 
 import numpy as np
 import polars as pl
 from scipy.stats import rankdata
 
-FEAT_DIR = Path("data/v2/features_ext")
-BTYD_DIR = Path("data/v2/features_bgnbd")
-IDX_PATH = Path("data/v2/exp1000/index.json")
-RES_PATH = Path("reports/exp1000_results.jsonl")
-PRED_DIR = Path("data/v2/exp1000/preds")
-SUB_DIR = Path("submissions")
+from common.paths import (
+    BTYD_DIR,
+    EXP1000_DIR,
+    FEATURES_EXT_DIR,
+    REPORTS_DIR,
+    SUBMISSIONS_DIR,
+)
+
+FEAT_DIR = FEATURES_EXT_DIR
+IDX_PATH = EXP1000_DIR / "index.json"
+RES_PATH = REPORTS_DIR / "exp1000_results.jsonl"
+PRED_DIR = EXP1000_DIR / "preds"
+SUB_DIR = SUBMISSIONS_DIR
 
 SEED = 42
 TRAIN_FOLDS = ["fold_00", "fold_01", "fold_02"]
@@ -302,7 +308,8 @@ def _make_model(model, params, seed, threads, quick):
 def _fit(model_name, model, Xtr, ytr, sw, Xs, es):
     t0 = time.time()
     if model_name.startswith("lgbm") and es is not None:
-        from lightgbm import early_stopping as lgb_es, log_evaluation
+        from lightgbm import early_stopping as lgb_es
+        from lightgbm import log_evaluation
         model.fit(Xtr, ytr, sample_weight=sw, eval_set=[es],
                   callbacks=[lgb_es(100, verbose=False), log_evaluation(0)])
     elif model_name.startswith("cat") and es is not None:
@@ -346,10 +353,10 @@ def run_hurdle_spec(spec, threads, quick):
     tr_X, tr_y, tr_sw, es, Xs = _train_arrays(spec)
     y_bin = (tr_y > 0).astype(np.int8)
     clf = _make_model("lgbm_clf", spec["params"]["clf"], SEED, threads, quick)
-    from lightgbm import early_stopping as lgb_es, log_evaluation
+    from lightgbm import early_stopping as lgb_es
+    from lightgbm import log_evaluation
     clf.fit(tr_X, y_bin, sample_weight=tr_sw, eval_set=[(es[0], (es[1] > 0).astype(np.int8))],
             callbacks=[lgb_es(100, verbose=False), log_evaluation(0)])
-    p_tr = clf.predict_proba(tr_X)[:, 1]
     p_val = clf.predict_proba(Xs[0])[:, 1]
     p_end = clf.predict_proba(Xs[1])[:, 1]
 
@@ -385,7 +392,7 @@ def run_pseudo_spec(spec, threads, quick):
     final.fit(X_all, y_all, sample_weight=sw_all)
     pv = np.clip(final.predict(Xs[0]), None, 30.0)
     pe = np.clip(final.predict(Xs[1]), None, 30.0)
-    print(f"      pseudo-refit done", flush=True)
+    print("      pseudo-refit done", flush=True)
     return {"z_val": pv, "z_end": pe}
 
 
@@ -537,7 +544,7 @@ def cmd_run(args) -> None:
                     break
                 if args.max_minutes and \
                         (time.time() - t_start) / 60 > args.max_minutes:
-                    print(f"time budget reached; stopping submissions")
+                    print("time budget reached; stopping submissions")
                     pending = False
                     break
                 futs[ex.submit(job, by_id[eid], args.threads,

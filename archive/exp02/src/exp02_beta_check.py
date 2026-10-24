@@ -14,6 +14,12 @@ import numpy as np
 import polars as pl
 from catboost import CatBoostRegressor
 
+# Каталоги артефактов эксперимента: отчёт и сабмит пишутся рядом с кодом.
+EXP_DIR = Path(__file__).resolve().parents[1]
+REPORTS_DIR = EXP_DIR / "reports"
+SUBMISSIONS_DIR = EXP_DIR / "submissions"
+
+
 SEED = 42
 DROP_COLS = ["anchor_date", "user_id", "target"]
 CV_FOLDS = ["fold_00", "fold_01", "fold_02"]
@@ -49,7 +55,7 @@ def load(name: str, extra_cols: list[str]) -> pl.DataFrame:
 
 
 def main() -> None:
-    dec = json.loads(Path("reports/exp02_metrics.json").read_text())["decision"]
+    dec = json.loads(Path(REPORTS_DIR / "exp02_metrics.json").read_text())["decision"]
     extra_cols = [f for b in dec["blocks"] for f in BLOCKS[b]]
     feat_cols = BASE_FEATURES + extra_cols
 

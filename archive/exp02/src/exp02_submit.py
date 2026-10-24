@@ -16,10 +16,16 @@ import numpy as np
 import polars as pl
 from catboost import CatBoostRegressor
 
+# Каталоги артефактов эксперимента: отчёт и сабмит пишутся рядом с кодом.
+EXP_DIR = Path(__file__).resolve().parents[1]
+REPORTS_DIR = EXP_DIR / "reports"
+SUBMISSIONS_DIR = EXP_DIR / "submissions"
+
+
 SEED = 42
 DROP_COLS = ["anchor_date", "user_id", "target"]
 CV_FOLDS = ["fold_00", "fold_01", "fold_02", "fold_03"]
-METRICS_PATH = Path("reports/exp02_metrics.json")
+METRICS_PATH = Path(REPORTS_DIR / "exp02_metrics.json")
 
 BASE_FEATURES = [
     c for c in pl.read_parquet("data/v2/features/fold_00/batch_0000.parquet").columns
@@ -130,8 +136,8 @@ def main() -> None:
     sub = sub.sort("__ord").drop("__ord")
     assert sub.height == 250_000 and sub.width == 2
 
-    Path("submissions").mkdir(exist_ok=True)
-    out = Path("submissions/submission_exp02.csv")
+    Path(SUBMISSIONS_DIR).mkdir(parents=True, exist_ok=True)
+    out = Path(SUBMISSIONS_DIR / "submission_exp02.csv")
     sub.write_csv(out)
 
     chk = pl.read_csv(out)

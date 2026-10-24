@@ -16,6 +16,12 @@ import numpy as np
 import polars as pl
 from catboost import CatBoostRegressor, Pool
 
+# Каталоги артефактов эксперимента: отчёт и сабмит пишутся рядом с кодом.
+EXP_DIR = Path(__file__).resolve().parents[1]
+REPORTS_DIR = EXP_DIR / "reports"
+SUBMISSIONS_DIR = EXP_DIR / "submissions"
+
+
 DROP_COLS = ["anchor_date", "user_id", "target"]
 SEED = 42
 
@@ -109,8 +115,8 @@ def main() -> None:
     for name, r in ranked:
         print(f"{r['rmsle_fold03']:.5f}  {name}")
 
-    Path("reports").mkdir(exist_ok=True)
-    with open("reports/train_ablation.json", "w") as fh:
+    Path(REPORTS_DIR).mkdir(parents=True, exist_ok=True)
+    with open(str(REPORTS_DIR / "train_ablation.json"), "w") as fh:
         json.dump(
             {
                 "protocol": "train fold_00..02 -> val fold_03, RMSE on log1p(target)",

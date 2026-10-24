@@ -50,11 +50,17 @@ from sklearn.metrics import adjusted_rand_score, silhouette_score
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import StandardScaler
 
+# Каталоги артефактов эксперимента: отчёт и сабмит пишутся рядом с кодом.
+EXP_DIR = Path(__file__).resolve().parents[1]
+REPORTS_DIR = EXP_DIR / "reports"
+SUBMISSIONS_DIR = EXP_DIR / "submissions"
+
+
 SEED = 42
 FOLDS = ["fold_00", "fold_01", "fold_02", "fold_03", "fold_end"]
 OUT_DIR = Path("data/v2/b05_seg")
-FIG_DIR = Path("reports/b05_figures")
-LOG_PATH = Path("reports/b05_cluster.log")
+FIG_DIR = Path(REPORTS_DIR / "b05_figures")
+LOG_PATH = Path(REPORTS_DIR / "b05_cluster.log")
 
 KS = list(range(4, 11))
 MIN_SEG_SHARE = 0.05

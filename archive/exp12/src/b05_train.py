@@ -35,12 +35,18 @@ import numpy as np
 import polars as pl
 from catboost import CatBoostRegressor, Pool
 
+# Каталоги артефактов эксперимента: отчёт и сабмит пишутся рядом с кодом.
+EXP_DIR = Path(__file__).resolve().parents[1]
+REPORTS_DIR = EXP_DIR / "reports"
+SUBMISSIONS_DIR = EXP_DIR / "submissions"
+
+
 SEED = 42
 DROP_COLS = ["anchor_date", "user_id", "target"]
 SEG_DIR = Path("data/v2/b05_seg")
-FIG_DIR = Path("reports/b05_figures")
-METRICS_PATH = Path("reports/b05_metrics.json")
-REPORT_PATH = Path("reports/b05_report.md")
+FIG_DIR = Path(REPORTS_DIR / "b05_figures")
+METRICS_PATH = Path(REPORTS_DIR / "b05_metrics.json")
+REPORT_PATH = Path(REPORTS_DIR / "b05_report.md")
 
 REF_LOFO = {"fold_00": 1.81545, "fold_01": 1.77420,
             "fold_02": 1.71090, "fold_03": 1.69277}

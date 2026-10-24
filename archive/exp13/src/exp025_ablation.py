@@ -25,11 +25,17 @@ import numpy as np
 import polars as pl
 from catboost import CatBoostRegressor
 
+# Каталоги артефактов эксперимента: отчёт и сабмит пишутся рядом с кодом.
+EXP_DIR = Path(__file__).resolve().parents[1]
+REPORTS_DIR = EXP_DIR / "reports"
+SUBMISSIONS_DIR = EXP_DIR / "submissions"
+
+
 SEED = 42
 CV_FOLDS = ["fold_00", "fold_01", "fold_02", "fold_03"]
 TRAIN_FOLDS = CV_FOLDS[:3]
 KEYS = {"anchor_date", "user_id", "target"}
-REPORT = Path("reports/exp025_ablation.json")
+REPORT = Path(REPORTS_DIR / "exp025_ablation.json")
 
 OUR_CONV_DECOMP_DUE_SHARES = [
     "conv_s2o", "conv_c2o", "conv_o2c",
@@ -144,7 +150,7 @@ def main() -> None:
     ref = 1.69277
     print(f"\ncontrol check: ours66 vs exp02 reference {ref}: "
           f"delta {results['ours66']['rmsle_fold03'] - ref:+.5f}", flush=True)
-    REPORT.parent.mkdir(exist_ok=True)
+    REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(json.dumps({
         "protocol": "train fold_00..02 -> fold_03 holdout; catboost rmse-z "
                     "lr0.05 d8 l2_3 seed42 x1000 (exp02 parity)",

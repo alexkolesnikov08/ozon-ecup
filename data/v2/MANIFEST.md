@@ -12,7 +12,7 @@
 | exp07 — PCA дневных панелей | тот же файл (блок `pca_00..31`) | там же |
 | exp04 — BTYD фичи | `data/v2/features_bgnbd/<fold>.parquet` + `fit_params.json` | `src/build_features_bgnbd.py` |
 | exp03 — hurdle приоры | `reports/exp03_hurdle_priors.json` | `src/exp03_hurdle_priors.py` |
-| exp06 — калибровка уровня | `reports/exp06_calibration.json` | `src/exp06_calibration_indices.py` |
+| exp06 — калибровка уровня | `archive/exp06/reports/exp06_calibration.json` | `archive/exp06/src/exp06_calibration_indices.py` |
 | exp10 (b01) — pseudo-лейблы | `data/v2/b01_pseudo/` | `archive/exp10/src/b01_features.py` |
 | exp11 (b03) — PLSI профили | `data/v2/b03_plsi/` | `archive/exp11/src/b03_features.py` |
 | exp12 (b05) — GMM сегменты | `data/v2/b05_seg/` | `archive/exp12/src/b05_cluster.py` |
@@ -65,7 +65,7 @@ CatBoost(exp01)=1.70261, лучший соло (exp13, 141f)=1.67027, чемпи
 
 ## Калибровка после обучения (exp06)
 
-`z' = z + c + β·log(s)`; индексы в reports/exp06_calibration.json:
+`z' = z + c + β·log(s)`; индексы в archive/exp06/reports/exp06_calibration.json:
 s_seasonal=1.1628 (сезонный аплифт тестового окна), yoy_cohort_user=1.3067 (структурный рост),
 local_drift=0.8094 (локальный даунтафт перед якорем сабмита — декабрьский пик нормализуется).
 Сетки c/β — внутри JSON. Приоры хёрдла (P(buy), E[z|buy] по сегментам рекенси×интент) —
@@ -77,5 +77,5 @@ local_drift=0.8094 (локальный даунтафт перед якорем 
 .venv/bin/python src/build_features_ext_pca.py      # ~4 мин
 .venv/bin/python src/build_features_bgnbd.py        # ~1 мин
 .venv/bin/python src/exp03_hurdle_priors.py         # ~1 мин
-.venv/bin/python src/exp06_calibration_indices.py   # ~1 мин
+.venv/bin/python archive/exp06/src/exp06_calibration_indices.py   # ~1 мин
 ```

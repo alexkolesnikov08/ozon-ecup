@@ -33,10 +33,16 @@ from sklearn.isotonic import IsotonicRegression
 from sklearn.linear_model import LinearRegression, RidgeCV
 from xgboost import XGBRegressor
 
+# Каталоги артефактов эксперимента: отчёт и сабмит пишутся рядом с кодом.
+EXP_DIR = Path(__file__).resolve().parents[1]
+REPORTS_DIR = EXP_DIR / "reports"
+SUBMISSIONS_DIR = EXP_DIR / "submissions"
+
+
 FEAT_DIR = Path("data/v2/features_ext")
 BTYD_DIR = Path("data/v2/features_bgnbd")
-REPORT_PATH = Path("reports/stack_search_v2.json")
-SUB_DIR = Path("submissions")
+REPORT_PATH = Path(REPORTS_DIR / "stack_search_v2.json")
+SUB_DIR = Path(SUBMISSIONS_DIR)
 
 SEED = 42
 TRAIN_FOLDS = ["fold_00", "fold_01", "fold_02"]
@@ -271,7 +277,7 @@ def main() -> None:
         tag = "STK " if "STACK" in n else "solo"
         print(f"  {s:.5f}  [{tag}] {n}")
 
-    SUB_DIR.mkdir(exist_ok=True)
+    SUB_DIR.mkdir(parents=True, exist_ok=True)
     sample = pl.read_csv("sample_submit.csv")
     order = sample.select("user_id").with_row_index("__ord")
     uids = folds["fold_end"]["user_id"].cast(pl.Int64)
@@ -309,7 +315,7 @@ def main() -> None:
         "rmsle_fold03": {"solo": solo,
                          "stack_raw": stack_raw_score,
                          "stack_calib": stack_calib_score},
-        "submissions": subs,
+        str(SUBMISSIONS_DIR): subs,
         "runtime_min": round((time.time() - t00) / 60, 1),
     }, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"\nreport -> {REPORT_PATH}")

@@ -1,0 +1,23 @@
+# Базовые зависимости — всё, кроме PyTorch.
+# Установка:  python -m pip install -r requirements/base.txt
+
+# Ядро данных
+numpy>=1.26
+polars>=1.0
+pandas>=2.0
+scipy>=1.11
+
+# Модели
+scikit-learn>=1.4
+catboost>=1.2
+lightgbm>=4.0
+xgboost>=2.0
+
+# BTYD (соло-диагностика, src/train_btyd.py)
+lifetimes>=0.9
+
+# Графики и отчёты
+matplotlib>=3.8
+
+# Классические временные ряды (SARIMA в архиве exp18)
+statsmodels>=0.14

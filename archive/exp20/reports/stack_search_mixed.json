@@ -1,0 +1,25 @@
+{
+  "_status": "placeholder",
+  "_note": "Оригинальный отчёт exp20 не сохранился. Карточка эксперимента в EXPERIMENTS.md фиксирует результат (fold_03 RMSLE 1.68608, rejected), но исходный JSON-артефакт утрачен. Этот файл — заглушка, чтобы ссылка в журнале не билась. Реальных метрик внутри нет.",
+  "experiment": "exp20",
+  "title": "Смешанный стек: 9 семейств моделей",
+  "members": [
+    "lgbm",
+    "cat",
+    "xgb",
+    "hist",
+    "ridge",
+    "linsvr",
+    "rf",
+    "knn",
+    "hurdle_lin"
+  ],
+  "known_result": {
+    "fold_03_rmsle_raw": 1.69159,
+    "fold_03_rmsle_calibrated": 1.68608,
+    "reference_stack_v3": 1.67150,
+    "status": "rejected",
+    "source": "EXPERIMENTS.md, карточка exp20"
+  },
+  "reproduce": ".venv/bin/python archive/exp20/src/train_stack_mixed.py"
+}

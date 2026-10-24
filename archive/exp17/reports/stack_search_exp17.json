@@ -1,0 +1,19 @@
+{
+  "_status": "placeholder",
+  "_note": "Оригинальный отчёт exp17 не сохранился. Карточка эксперимента в EXPERIMENTS.md фиксирует результат (fold_03 RMSLE 1.66847), но исходный JSON-артефакт утрачен. Этот файл — заглушка, чтобы ссылка в журнале не билась. Реальных метрик внутри нет.",
+  "experiment": "exp17",
+  "title": "Фичи трендов, брошенных корзин и сезонности",
+  "features_added": [
+    "x_gmv_trend_short",
+    "x_cart_abandoned_accum",
+    "x_seasonality_flags"
+  ],
+  "known_result": {
+    "fold_03_rmsle": 1.66847,
+    "reference_exp15": 1.66908,
+    "best_member": "solo cat",
+    "meta_stack": 1.67033,
+    "source": "EXPERIMENTS.md, карточка exp17"
+  },
+  "reproduce": ".venv/bin/python archive/exp17/src/train_exp17.py"
+}

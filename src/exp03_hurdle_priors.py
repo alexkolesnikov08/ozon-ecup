@@ -17,13 +17,14 @@ Run from repo root:
 
 import json
 from datetime import date, timedelta
-from pathlib import Path
 
 import numpy as np
 import polars as pl
 
-FEAT_DIR = Path("data/v2/features_ext")
-OUT_PATH = Path("reports/exp03_hurdle_priors.json")
+from common.paths import FEATURES_EXT_DIR, REPORTS_DIR
+
+FEAT_DIR = FEATURES_EXT_DIR
+OUT_PATH = REPORTS_DIR / "exp03_hurdle_priors.json"
 
 CV_ANCHORS = {
     "fold_00": date(2025, 12, 3),

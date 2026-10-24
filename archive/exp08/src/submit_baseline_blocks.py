@@ -24,9 +24,15 @@ import numpy as np
 import polars as pl
 from catboost import CatBoostRegressor
 
+# Каталоги артефактов эксперимента: отчёт и сабмит пишутся рядом с кодом.
+EXP_DIR = Path(__file__).resolve().parents[1]
+REPORTS_DIR = EXP_DIR / "reports"
+SUBMISSIONS_DIR = EXP_DIR / "submissions"
+
+
 FEAT_DIR = Path("data/v2/features_ext")
 BTYD_DIR = Path("data/v2/features_bgnbd")
-REPORT_PATH = Path("reports/bl_blocks.json")
+REPORT_PATH = Path(REPORTS_DIR / "bl_blocks.json")
 
 META_COLS = {"anchor_date", "user_id", "target"}
 SEED = 42
@@ -94,7 +100,7 @@ def main() -> None:
 
     sample = pl.read_csv("sample_submit.csv")
     order = sample.select("user_id").with_row_index("__ord")
-    Path("submissions").mkdir(exist_ok=True)
+    Path(SUBMISSIONS_DIR).mkdir(parents=True, exist_ok=True)
 
     results: dict[str, dict] = {}
     for name, cols in variants.items():
@@ -117,7 +123,7 @@ def main() -> None:
         }
         print(f"{name:<20}: RMSLE(fold_03)={score:.5f} ({t_fit:.0f}s)", flush=True)
 
-        out_path = Path(f"submissions/submission_bl_{name.replace('+', '_')}.csv")
+        out_path = Path(str(SUBMISSIONS_DIR / f"submission_bl_{name.replace('+', '_')}.csv"))
         pred_end = np.clip(np.expm1(model.predict(M_end[:, idx])), 0, None)
         assert np.isfinite(pred_end).all() and (pred_end >= 0).all()
         sub = (

@@ -26,7 +26,6 @@ import json
 import time
 import warnings
 from datetime import date, timedelta
-from pathlib import Path
 
 warnings.filterwarnings("ignore")
 
@@ -38,11 +37,18 @@ import matplotlib.pyplot as plt
 import numpy as np
 import polars as pl
 
-DATA_PATH = Path("data/train.parquet")
-SAMPLE_PATH = Path("sample_submit.csv")
-OUT_PATH = Path("reports/exp11_global_lags.json")
-FIG_DIR = Path("reports/figures")
-SUB_PATH = Path("submissions/submission_exp11.csv")
+from common.paths import (
+    REPORTS_DIR,
+    SAMPLE_SUBMIT,
+    SUBMISSIONS_DIR,
+    TRAIN_PARQUET,
+)
+
+DATA_PATH = TRAIN_PARQUET
+SAMPLE_PATH = SAMPLE_SUBMIT
+OUT_PATH = REPORTS_DIR / "exp11_global_lags.json"
+FIG_DIR = REPORTS_DIR / "figures"
+SUB_PATH = SUBMISSIONS_DIR / "submission_exp11.csv"
 
 H = 30
 SEED = 42

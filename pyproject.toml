@@ -1,0 +1,44 @@
+[project]
+name = "ozon-ecup"
+version = "0.2.0"
+description = "Ozon search LTV forecasting: GBDT ensemble stacking (CatBoost, LightGBM, XGBoost) with OOF calibration"
+requires-python = ">=3.11"
+
+# Зависимости живут в requirements/: pip install -r requirements/base.txt
+# (см. requirements/README.md). Здесь только конфигурация инструментов.
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["archive"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle
+    "F",   # pyflakes
+    "I",   # isort
+    "W",   # warnings
+]
+ignore = [
+    "E501",  # длинные строки — в этом репо они встречаются в SQL-подобных сегментах
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Архив — замороженная история, не чистим.
+"archive/**" = ["ALL"]
+# Ноутбук организаторов лежит в корне.
+"*.ipynb" = ["E402"]
+# matplotlib.use("Agg") обязан идти до import matplotlib.pyplot — импорты после
+# него неизбежно дают E402.
+"src/exp11_global_lags.py" = ["E402"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.basedpyright]
+include = ["src"]
+exclude = ["archive", "**/__pycache__"]
+pythonVersion = "3.11"
+typeCheckingMode = "basic"
+reportMissingImports = "none"
