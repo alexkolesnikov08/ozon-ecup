@@ -27,15 +27,16 @@ import argparse
 import json
 import time
 from datetime import date
-from pathlib import Path
 
 import numpy as np
 import polars as pl
 from scipy.optimize import minimize
 from scipy.special import gammaln, hyp2f1
 
-DATA_PATH = Path("data/train.parquet")
-OUT_DIR = Path("data/v2/features_bgnbd")
+from common.paths import BTYD_DIR, TRAIN_PARQUET
+
+DATA_PATH = TRAIN_PARQUET
+OUT_DIR = BTYD_DIR
 
 CV_ANCHORS = [
     date(2025, 12, 3),

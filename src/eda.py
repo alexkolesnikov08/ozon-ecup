@@ -1,17 +1,22 @@
 """EDA of data/train.parquet: integrity, target structure, persistence,
 seasonality/calendar, intent signals, segments. Prints findings and writes
-reports/eda_2026_08_24.md."""
+reports/eda.md.
+
+Historical snapshot of the first run (2026-08-24) is kept as
+reports/eda_2026_08_24.md.
+"""
 
 from __future__ import annotations
 
 from datetime import date, timedelta
-from pathlib import Path
 
 import numpy as np
 import polars as pl
 
-TRAIN_PATH = "data/train.parquet"
-REPORT_PATH = "reports/eda_2026_08_24.md"
+from common.paths import REPORTS_DIR, TRAIN_PARQUET
+
+TRAIN_PATH = TRAIN_PARQUET
+REPORT_PATH = REPORTS_DIR / "eda.md"
 
 CV_ANCHORS = {
     "fold_00": date(2025, 12, 3),
@@ -336,13 +341,13 @@ def main() -> None:
         no = fe_hist.filter(pl.col("rec_ord").is_null() | (pl.col("rec_ord") >= thr)).height
         out(f"fold_end: без активности >= {thr:>2}д: {n:>7,} ({n/2.5e5:.1%}); без заказа >= {thr:>2}д/никогда: {no:>7,} ({no/2.5e5:.1%})")
 
-    Path(REPORT_PATH).parent.mkdir(parents=True, exist_ok=True)
+    REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
     header = (
-        "# EDA train.parquet — 2026-08-24\n\n"
+        f"# EDA train.parquet — {date.today().isoformat()}\n\n"
         "Автоотчёт: `src/eda.py`. Назначение — проверка гипотез о структуре данных "
         "для приоритизации экспериментов 2–5.\n"
     )
-    Path(REPORT_PATH).write_text(header + "\n".join(LINES) + "\n", encoding="utf-8")
+    REPORT_PATH.write_text(header + "\n".join(LINES) + "\n", encoding="utf-8")
     print(f"\nreport saved -> {REPORT_PATH}")
 
 

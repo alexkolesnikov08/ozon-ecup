@@ -27,15 +27,16 @@ may stay NaN (CatBoost handles natively). Run from repo root:
 import argparse
 import time
 from datetime import date, timedelta
-from pathlib import Path
 
 import numpy as np
 import polars as pl
 from sklearn.decomposition import IncrementalPCA
 from sklearn.preprocessing import StandardScaler
 
-DATA_PATH = Path("data/train.parquet")
-OUT_DIR = Path("data/v2/features_ext")
+from common.paths import FEATURES_EXT_DIR, TRAIN_PARQUET
+
+DATA_PATH = TRAIN_PARQUET
+OUT_DIR = FEATURES_EXT_DIR
 
 BATCH_SIZE = 50_000
 HORIZON_DAYS = 30
