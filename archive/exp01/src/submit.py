@@ -10,6 +10,12 @@ from catboost import CatBoostRegressor, Pool
 
 from train import DROP_COLS, SEED, load_fold, rmsle, xy
 
+# Каталоги артефактов эксперимента: отчёт и сабмит пишутся рядом с кодом.
+EXP_DIR = Path(__file__).resolve().parents[1]
+REPORTS_DIR = EXP_DIR / "reports"
+SUBMISSIONS_DIR = EXP_DIR / "submissions"
+
+
 BEST_N_ESTIMATORS = 1000
 
 
@@ -59,8 +65,8 @@ def main() -> None:
     sub = sub.join(sample.select("user_id").with_row_index("__ord"), on="user_id")
     sub = sub.sort("__ord").drop("__ord")
 
-    Path("submissions").mkdir(exist_ok=True)
-    out = Path("submissions/submission_exp01.csv")
+    Path(SUBMISSIONS_DIR).mkdir(parents=True, exist_ok=True)
+    out = Path(SUBMISSIONS_DIR / "submission_exp01.csv")
     sub.write_csv(out)
 
     chk = pl.read_csv(out)

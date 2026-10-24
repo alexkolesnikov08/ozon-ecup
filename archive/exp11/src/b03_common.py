@@ -30,6 +30,13 @@ from pathlib import Path  # noqa: E402
 import numpy as np  # noqa: E402
 import polars as pl  # noqa: E402
 from statsmodels.tsa.seasonal import STL  # noqa: E402
+from pathlib import Path
+
+# Каталоги артефактов эксперимента: отчёт и сабмит пишутся рядом с кодом.
+EXP_DIR = Path(__file__).resolve().parents[1]
+REPORTS_DIR = EXP_DIR / "reports"
+SUBMISSIONS_DIR = EXP_DIR / "submissions"
+
 
 SEED = 42
 
@@ -37,9 +44,9 @@ DATA_PATH = Path("data/train.parquet")
 OUT_DIR = Path("data/v2/b03_plsi")
 INDEX_DIR = OUT_DIR / "index"
 PARTS_DIR = OUT_DIR / "parts"
-FIG_DIR = Path("reports/b03_figures")
-METRICS_PATH = Path("reports/b03_metrics.json")
-SUB_PATH = Path("submissions/b03_submission_plsi.csv")
+FIG_DIR = Path(REPORTS_DIR / "b03_figures")
+METRICS_PATH = Path(REPORTS_DIR / "b03_metrics.json")
+SUB_PATH = Path(SUBMISSIONS_DIR / "b03_submission_plsi.csv")
 
 HORIZON = 30
 STL_PERIOD = 7

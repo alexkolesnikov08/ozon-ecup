@@ -20,6 +20,12 @@ import polars as pl
 from catboost import CatBoostRegressor, Pool
 from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score
 
+# Каталоги артефактов эксперимента: отчёт и сабмит пишутся рядом с кодом.
+EXP_DIR = Path(__file__).resolve().parents[1]
+REPORTS_DIR = EXP_DIR / "reports"
+SUBMISSIONS_DIR = EXP_DIR / "submissions"
+
+
 DROP_COLS = ["anchor_date", "user_id", "target"]
 SEED = 42
 FOLDS = [f"fold_{i:02d}" for i in range(4)]
@@ -102,9 +108,9 @@ def main() -> None:
         print("\n=== ACCURACY / RMSLE (OOF, honest) ===")
         print(res)
 
-    Path("reports").mkdir(exist_ok=True)
-    oof.write_parquet("reports/accuracy_oof.parquet")
-    with open("reports/accuracy_oof.json", "w") as fh:
+    Path(REPORTS_DIR).mkdir(parents=True, exist_ok=True)
+    oof.write_parquet(str(REPORTS_DIR / "accuracy_oof.parquet"))
+    with open(str(REPORTS_DIR / "accuracy_oof.json"), "w") as fh:
         json.dump({
             "protocol": "LOO CatBoost RMSE on z=log1p, features_exp02, parity with exp02",
             "params": PARAMS,

@@ -33,10 +33,16 @@ import numpy as np
 import polars as pl
 from sklearn.isotonic import IsotonicRegression
 
+# Каталоги артефактов эксперимента: отчёт и сабмит пишутся рядом с кодом.
+EXP_DIR = Path(__file__).resolve().parents[1]
+REPORTS_DIR = EXP_DIR / "reports"
+SUBMISSIONS_DIR = EXP_DIR / "submissions"
+
+
 ART_DIR = Path("data/v2/b01_pseudo")
-FIG_DIR = Path("reports/b01_figures")
-METRICS_PATH = Path("reports/b01_metrics.json")
-SUB_PATH = Path("submissions/b01_submission_calibrated.csv")
+FIG_DIR = Path(REPORTS_DIR / "b01_figures")
+METRICS_PATH = Path(REPORTS_DIR / "b01_metrics.json")
+SUB_PATH = Path(SUBMISSIONS_DIR / "b01_submission_calibrated.csv")
 
 CV_FOLDS = ["fold_00", "fold_01", "fold_02", "fold_03"]
 T_GRID = np.round(np.arange(0.0, 2.0001, 0.05), 2)
@@ -292,7 +298,7 @@ def main() -> None:
     sub = sub.join(sample.select("user_id").with_row_index("__ord"), on="user_id")
     sub = sub.sort("__ord").drop("__ord")
     assert sub.height == 250_000 and sub.width == 2
-    SUB_PATH.parent.mkdir(exist_ok=True)
+    SUB_PATH.parent.mkdir(parents=True, exist_ok=True)
     sub.write_csv(SUB_PATH)
 
     chk = pl.read_csv(SUB_PATH)

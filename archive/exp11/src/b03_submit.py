@@ -111,7 +111,7 @@ def main() -> None:
     sub = sub.sort("__ord").drop("__ord")
     assert sub.height == 250_000 and sub.width == 2
 
-    SUB_PATH.parent.mkdir(exist_ok=True)
+    SUB_PATH.parent.mkdir(parents=True, exist_ok=True)
     sub.write_csv(SUB_PATH)
 
     chk = pl.read_csv(SUB_PATH)

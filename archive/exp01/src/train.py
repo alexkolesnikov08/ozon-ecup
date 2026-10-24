@@ -18,11 +18,17 @@ import numpy as np
 import polars as pl
 from catboost import CatBoostRegressor, Pool
 
+# Каталоги артефактов эксперимента: отчёт и сабмит пишутся рядом с кодом.
+EXP_DIR = Path(__file__).resolve().parents[1]
+REPORTS_DIR = EXP_DIR / "reports"
+SUBMISSIONS_DIR = EXP_DIR / "submissions"
+
+
 DROP_COLS = ["anchor_date", "user_id", "target"]
 SEED = 42
 N_ESTIMATORS_SERIES = [100, 300, 500, 1000]
 
-FIG_DIR = Path("reports/figures")
+FIG_DIR = Path(REPORTS_DIR / "figures")
 
 
 def rmsle(y_true: np.ndarray, y_pred: np.ndarray) -> float:
@@ -102,7 +108,7 @@ def main() -> None:
 
     print(f"\nBEST: n_estimators={best['n_estimators']} RMSLE={best['rmsle']:.5f}")
 
-    with open("reports/exp01_metrics.json", "w") as fh:
+    with open(str(REPORTS_DIR / "exp01_metrics.json"), "w") as fh:
         json.dump(
             {
                 "config": {
@@ -116,8 +122,8 @@ def main() -> None:
                 },
                 "results": results,
                 "best": {"n_estimators": best["n_estimators"], "rmsle_fold03": round(best["rmsle"], 5)},
-                "baselines_exp00": json.load(open("reports/exp00_baselines.json"))
-                if Path("reports/exp00_baselines.json").exists()
+                "baselines_exp00": json.load(open(str(REPORTS_DIR / "exp00_baselines.json")))
+                if Path(REPORTS_DIR / "exp00_baselines.json").exists()
                 else None,
             },
             fh,
@@ -174,7 +180,7 @@ def main() -> None:
     plt.savefig(FIG_DIR / "exp01_pred_vs_actual.png", dpi=150)
     plt.close()
 
-    best["model"].save_model("reports/exp01_best_model.cbm")
+    best["model"].save_model(str(REPORTS_DIR / "exp01_best_model.cbm"))
     print("plots and metrics saved")
 
 

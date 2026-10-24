@@ -37,10 +37,16 @@ from sklearn.linear_model import LinearRegression, RidgeCV
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
+# Каталоги артефактов эксперимента: отчёт и сабмит пишутся рядом с кодом.
+EXP_DIR = Path(__file__).resolve().parents[1]
+REPORTS_DIR = EXP_DIR / "reports"
+SUBMISSIONS_DIR = EXP_DIR / "submissions"
+
+
 FEAT_DIR = Path("data/v2/features_ext")
 BTYD_DIR = Path("data/v2/features_bgnbd")
-REPORT_PATH = Path("reports/stack_search.json")
-SUB_DIR = Path("submissions")
+REPORT_PATH = Path(REPORTS_DIR / "stack_search.json")
+SUB_DIR = Path(SUBMISSIONS_DIR)
 
 SEED = 42
 TRAIN_FOLDS = ["fold_00", "fold_01", "fold_02"]
@@ -227,7 +233,7 @@ def main() -> None:
     print(f"\nBEST STACK: meta={best_meta_name} -> {stack_scores[best_meta_name]:.5f}")
 
     print("\n=== STAGE D: submissions ===")
-    SUB_DIR.mkdir(exist_ok=True)
+    SUB_DIR.mkdir(parents=True, exist_ok=True)
     sample = pl.read_csv("sample_submit.csv")
     order = sample.select("user_id").with_row_index("__ord")
     uids = folds["fold_end"]["user_id"].cast(pl.Int64)
@@ -263,7 +269,7 @@ def main() -> None:
         "best_params": best_params,
         "rmsle_fold03": {"stack": stack_scores, "solo": solo},
         "meta_coefs": coefs,
-        "submissions": subs,
+        str(SUBMISSIONS_DIR): subs,
         "runtime_min": round((time.time() - t00) / 60, 1),
     }, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"\nreport -> {REPORT_PATH}")

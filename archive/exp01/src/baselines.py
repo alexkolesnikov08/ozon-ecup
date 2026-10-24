@@ -6,6 +6,12 @@ from pathlib import Path
 import numpy as np
 import polars as pl
 
+# Каталоги артефактов эксперимента: отчёт и сабмит пишутся рядом с кодом.
+EXP_DIR = Path(__file__).resolve().parents[1]
+REPORTS_DIR = EXP_DIR / "reports"
+SUBMISSIONS_DIR = EXP_DIR / "submissions"
+
+
 
 def rmsle(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     lt = np.log1p(np.clip(y_true, 0, None))
@@ -27,8 +33,8 @@ def main() -> None:
     for name, m in metrics.items():
         print(f"{name:>14}: RMSLE = {m:.5f}")
 
-    Path("reports").mkdir(exist_ok=True)
-    with open("reports/exp00_baselines.json", "w") as fh:
+    Path(REPORTS_DIR).mkdir(parents=True, exist_ok=True)
+    with open(str(REPORTS_DIR / "exp00_baselines.json"), "w") as fh:
         json.dump(metrics, fh, indent=2)
 
 
