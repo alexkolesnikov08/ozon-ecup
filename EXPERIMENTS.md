@@ -1,10 +1,27 @@
 # Experiment Log
 
 Единый журнал: **одна запись = один эксперимент**, сквозная нумерация `exp00…expNN`.
-Исторические имена (`b01`, `b03`, `b05`, `e2`, `stack`, `exp025`) сохранены как алиасы в карточках.
-Постановка задачи, структура репо и окружение — в [README.md](README.md).
+Исторические имена (`b01`, `b03`, `b05`, `e2`, `stack`, `exp025`) сохранены как
+алиасы в карточках.
+
+Постановка задачи и структура репозитория — в [README.md](README.md).
+Протокол валидации — в [docs/PROTOCOL.md](docs/PROTOCOL.md).
+Открытые задачи — в [notes/backlog.md](notes/backlog.md).
+
+## Содержание
+
+- [Протокол](#протокол-общий-для-всех-экспериментов)
+- [🏆 Champion](#-champion)
+- [Leaderboard](#leaderboard)
+  - [Сабмиты на лидерборде](#сабмиты-на-лидерборде-соревнования)
+  - [Диагностика](#диагностика-в-лидерборд-не-входит)
+- [Карточки экспериментов](#карточки-экспериментов)
+- [Что дальше](#что-дальше)
+- [Шаблон новой записи](#шаблон-новой-записи)
 
 ## Протокол (общий для всех экспериментов)
+
+Каноническая версия протокола — [docs/PROTOCOL.md](docs/PROTOCOL.md). Кратко:
 
 - **Валидация**: time-CV, якоря fold_00..03 = `2025-12-03 / 12-17 / 12-31 / 2026-01-14`;
   обучение fold_00..02, холдаут **fold_03** — основной критерий лидерборда.
@@ -22,6 +39,10 @@
 
 **exp15 — стек v2 + OOF-калибровка: CV RMSLE(fold_03) = 1.66908.**
 Регенерация сабмита: `.venv/bin/python archive/exp15/src/train_stack_v2.py`.
+
+Отдельно: лучший **локальный** CV — exp23 (пер-юзерная персонализация, 1.62463),
+но на лидерборде он переобучился (1.6862); бленд 50/50 с чемпионом даёт ~1.66.
+Прод-база — классическая ветка exp26 (1.66916).
 
 ## Leaderboard
 
@@ -54,7 +75,7 @@
 | 24 | 2026-08-30 | Per-user n=5 it25 (dense 5 anchors)                | 1.63498 (1k)       | done       | pilot -0.027 vs n3 |
 | 25 | 2026-08-30 | Per-user n=3 it50 / n=5 it25 heavy 6h              | 1.638 (1k)         | planned    | 6h на 50c серваке, 85ms/user |
 | 26 | 2026-08-30 | Segmented LTV + Transformer blend (PR #5)          | **1.66916** (classical blend) | done       | leakage-safe 205f, ADI/CV², 26w; trans 1.682 |
-| 26p| 2026-08-30 | Pilots: dense/lag/transformer diagnostics          | —                  | archive    | см. archive/exp26_pilots |
+| 26p| 2026-08-30 | Pilots: dense/lag/transformer diagnostics          | —                  | archive    | см. archive/exp26p |
 
 Справочные точки fold_03: zero 3.20364 · median 2.28900 · naive 2.19506.
 
@@ -84,6 +105,13 @@
   ценность только как ортогональные фичи.
 
 ---
+
+---
+
+## Карточки экспериментов
+
+Одна карточка — один эксперимент. Код и отчёты закрытых экспериментов
+лежат в `archive/expNN/` (краткая карточка — в `README.md` внутри каталога).
 
 ## exp00 — Наивный автогресс (baseline)
 
@@ -188,15 +216,15 @@
 - **Метод**: поверх любого сабмита — (а) сдвиг `ẑ' = ẑ + c` по pooled OOF (изотоника/скаляр);
   (б) сезонная поправка `ẑ' = ẑ + β·log(ŝ)`, β∈[0..1]; (в) recency-взвешивание фолдов
   как альтернативный учёт дрейфа.
-- **Результат**: индексы готовы (`reports/exp06_calibration.json`): s_seasonal=1.1628,
+- **Результат**: индексы готовы (`archive/exp06/reports/exp06_calibration.json`): s_seasonal=1.1628,
   yoy_cohort_user=1.3067, local_drift=0.8094 (⚠️ локальный даунтафт перед якорем —
   калибровку вниз тоже проверять). Проверки: exp10 — порог/изотоника выигрыша не дали;
   exp11 — на fold_03 сдвиг не нужен (s*=0.9512 → −0.0016, шум); скалярный сдвиг помог
   только внутри мета-модели стека (intercept +0.024 в exp08, c=−0.06 в exp15).
 - **Вывод**: закрыт — калибровка уровня полезна как часть мета-модели стека, а не как
   пост-обработка поверх готового сабмита.
-- **Артефакты**: `src/exp06_calibration_indices.py`, `reports/exp06_calibration.json`,
-  инструмент `src/oof_calibrate.py`.
+- **Артефакты**: `archive/exp06/src/exp06_calibration_indices.py`, `archive/exp06/reports/exp06_calibration.json`,
+  инструмент `archive/exp06/src/oof_calibrate.py`.
 
 ---
 
@@ -378,8 +406,8 @@
   лучший скор показал `[solo] cat`, обойдя мета-модель стекинга (1.67033).
 - **Вывод**: гипотеза подтвердилась, фичи дают прирост. Соло-модель пока 
   побеждает, требуется полноценный перебор параметров ансамбля на сервере.
-- **Артефакты**: `src/build_features_exp17.py`, `src/train_exp17.py`, 
-  `reports/stack_search_exp17.json`.
+- **Артефакты**: `archive/exp17/src/build_features_exp17.py`, `archive/exp17/src/train_exp17.py`, 
+  `archive/exp17/reports/stack_search_exp17.json`.
 
 ---
 
@@ -388,7 +416,7 @@
 - **Гипотеза**: GMV юзера за окно = прогноз платформенного дневного ряда (классические TS:
   Holt/ETS, Holt-Winters с недельной сезонностью, SARIMA(1,1,1)(1,0,1)[7], эмпирический
   дрейф по отношениям 30д-блоков) × доля юзера (past30/G_prev30) — сольный подход уровня наива+.
-- **Метод** (`src/exp10_decomposition.py`): платформенный ряд = сумма gmv всех юзеров по дням
+- **Метод** (`archive/exp18/src/exp10_decomposition.py`): платформенный ряд = сумма gmv всех юзеров по дням
   (reindex до полного календаря); для каждого якоря fit строго на истории ≤ якоря, горизонт H=30;
   распределение по юзерам preserve (y_u = Ĝ·past30_u/G_prev30) и шринкейдж доли псевдо-каунтами
   K∈{5,25} по активным дням; oracle_preserve (=фактический уровень окна) как потолок семейства.
@@ -407,8 +435,8 @@
 - **Вывод**: **rejected как соло**. Потолок семейства «уровень × доля» низкий: перенос уровня даёт
   ≤ −2% RMSLE и то не на всех фолдах (на fold_00 oracle хуже наива). Польза остаётся только как
   вход калибровки уровня поверх моделей (территория exp06): календарная структура окна важнее
-  тренда ряда, и именно она дала весь выигрыш на fold_02. Артефакты: reports/exp10_decomposition.json,
-  reports/figures/exp10_fold_*.png. В .venv добавлен statsmodels 0.14.6.
+  тренда ряда, и именно она дала весь выигрыш на fold_02. Артефакты: archive/exp18/reports/exp10_decomposition.json,
+  archive/exp18/reports/figures/exp10_fold_*.png. В .venv добавлен statsmodels 0.14.6.
 
 ---
 
@@ -417,21 +445,21 @@
 - **Гипотеза**: удаление дублирующихся/слабых/зажатых фичей (141 → 85) снизит шум и
   переобучение базовых моделей, стек на очищенном датасете сравняется или обгонит v2 при
   обучении в ~2 раза быстрее.
-- **Метод** (`src/build_dataset_v3.py`): 3 раунда голосования по схеме A–H — выкинуты
+- **Метод** (`archive/exp19/src/build_dataset_v3.py`): 3 раунда голосования по схеме A–H — выкинуты
   x_*-дубликаты base (100% совпадение), слабые (corr_z ≤ .03 / 43% NaN), BTYD-входы
   (копии base), окно 60d (зажато 30d/90d, corr .92–.98), EWMA-ветка чека; PCA урезан
   32 → 16 (сигнал в 00–01); сентинел recency 999 → флаг + кап 90д; BTYD-джойн inner
   (−0.8% трейна). Итог: 85 фичей + ключи + таргет = 88 колонок, 0 NULL, без дублей ключей.
-  Стек (`src/train_stack_v3.py`) — протокол exp08 на data/v3: Stage A тюнинг → B OOF LOFO →
+  Стек (`archive/exp19/src/train_stack_v3.py`) — протокол exp08 на data/v3: Stage A тюнинг → B OOF LOFO →
   B2 прод-бейзы → C мета → D калибровка c×τ → E скоры fold_03 + сабмиты.
 - **Результат** (fold_03): стек raw **1.67278**, калиброванный **1.67150**; соло: hist 1.67238,
   cat 1.67081, lgbm 1.67321, xgb 1.68534. Против v2 (raw 1.67101 / calib 1.66908) — чуть хуже
   локально, при этом соло-качество сохранилось, а обучение ускорилось.
 - **LB**: прогон с сервера дал **2.80** — аномалия (см. таблицу сабмитов выше), расследование
-  отдельно; локальные артефакты консистентны (reports/stack_search_v3.json).
+  отдельно; локальные артефакты консистентны (archive/exp19/reports/stack_search_v3.json).
 - **Вывод**: очистка не дала буста (GBDT и так устойчивы к коррелированному шуму), но датасет
   полезен как быстрый/стабильный бейзлайн и как база для быстрых итераций. Артефакты:
-  `data/v3/` (MANIFEST.md в репо), `reports/dataset_v3_report.json`, `reports/stack_search_v3.json`,
+  `data/v3/` (MANIFEST.md в репо), `archive/exp19/reports/dataset_v3_report.json`, `archive/exp19/reports/stack_search_v3.json`,
   сабмиты `submission_{v3_cat,v3_lgbm,stack_v3,stack_v3_calib}.csv`.
 
 ## exp20 — Смешанный стек: 9 семейств моделей на base+ext+pca (без BTYD)  *(alias PR exp12)*
@@ -439,7 +467,7 @@
 - **Гипотеза**: (а) BTYD-фичи шумят — лучший LB у бленда `bl_base_ext_pca` (1.66035) без них;
   (б) разнообразие алгоритмов (не только GBDT-деревья) улучшит стек: линейные модели ловят
   другое, kNN на PCA — другую геометрию, hurdle атакует 46% нулей таргета.
-- **Метод** (`src/train_stack_mixed.py`): блок фичей base+ext+pca (130 колонок, BTYD-колонки
+- **Метод** (`archive/exp20/src/train_stack_mixed.py`): блок фичей base+ext+pca (130 колонок, BTYD-колонки
   отфильтрованы). 9 членов: lgbm/cat/xgb/hist (нелинейности), ridge + LinearSVR (линейные на
   стандартизованных), RandomForest (устойчивость к выбросам), kNN(k=100, distance) по
   PCA-компонентам (подвыборка 120k референсов), hurdle_lin (LogisticRegression P(buy) ×
@@ -460,14 +488,14 @@
   стека остаётся: lgbm + cat + xgb + hist (+ квантильные варианты). Побочный сигнал: соло
   скоры сервера на 0.003–0.006 хуже локальных при том же коде — ещё одно указание на
   проблему данных на сервере (см. инцидент в таблице сабмитов). Артефакты:
-  `reports/stack_search_mixed.json`, `submission_stack_mixed{,_calib}.csv`.
+  `archive/exp20/reports/stack_search_mixed.json`, `submission_stack_mixed{,_calib}.csv`.
 
 ## exp21 — Hurdle-ансамбль: LGBM-classifier P(y>0) × стек v3 E[z|y>0]  *(alias PR exp13)*
 
 - **Гипотеза**: на zero-inflated таргете (42–46% нулей) hurdle `ẑ = P(y>0|X)·E[z|y>0,X]`
   (точное тождество моментов при z=log1p(y)) систематически обыгрывает single-stage:
   Stage 1 не тратит ёмкость бустинга на границу режимов, Stage 2 учит чистые уровни покупателей.
-- **Метод** (`src/train_stack_hurdle.py`, протокол v3): Stage 1 — LGBMClassifier(binary) без
+- **Метод** (`archive/exp21/src/train_stack_hurdle.py`, протокол v3): Stage 1 — LGBMClassifier(binary) без
   scale_pos_weight, изотоника p̂ по OOF (выбор raw/iso на inner); Stage 2 — члены v3
   (lgbm/lgbm_q50/hist/cat/cat_q50/xgb), обученные ТОЛЬКО на y>0 и предсказывающие все строки;
   мета (ridgecv/ols_pos/lgbm_meta) выбирается по итоговому hurdle-RMSLE на inner-slice fold_02.
@@ -488,7 +516,7 @@
   inner-slice — в минус на обоих прогонах. Наследие: (1) submission_hurdle.csv — кандидат в
   бленд с bl_base_ext_pca; (2) p̂ и ẑ₂ по отдельности — кандидаты на фичи для одиночного стека;
   (3) серверный пайплайн с прямой заливкой датасета (минуя сборку фичей) даёт корректные
-  артефакты — шаблон для будущих прогонов. Артефакты: reports/stack_search_hurdle.json (+_remote),
+  артефакты — шаблон для будущих прогонов. Артефакты: archive/exp21/reports/stack_search_hurdle.json (+_remote),
   submissions/submission_hurdle{,_calib,_blend_calib}.csv.
 
 ---
@@ -498,7 +526,7 @@
 - **Гипотеза**: hurdle `E[y|X] = P(buy) × E[y|buy]` поверх лучшего бейзлайна (одиночный
   CatBoost, LB 1.66035) уменьшит систематическое занижение суммы выручки; пер-бинные и
   пер-сегментные поправки перенесут калибровку с inner на fold_03.
-- **Метод** (`src/exp14_ev_calib.py`): Stage 1 — CatBoostClassifier P(buy), отбор по
+- **Метод** (`archive/exp22/src/exp14_ev_calib.py`): Stage 1 — CatBoostClassifier P(buy), отбор по
   Gini = 2·AUC−1; Stage 2 — CatBoost RMSE log1p на покупателях (конфиг exp01);
   H1 — пер-бинная коррекция по ẑ₂ (EB-shrinkage, λ=1000); H2 — пер-сегментная
   recency × intent (λ=500). Инсайт: `expm1(p·ẑ₂) ≠ p·expm1(ẑ₂)` — умножение внутри
@@ -509,76 +537,7 @@
 - **Вывод**: **не для RMSLE-лидерборда** (2.23 vs чемпион 1.66). Калибровка суммы полезна
   как диагностика bias; RMSLE этих сабмитов хуже чемпиона. Сабмит pooled-рефит:
   `submissions/submission_hurdle_bl_ev.csv` (сумма ~23.1M).
-- **Артефакты**: `src/exp14_ev_calib.py`, `reports/exp14_ev_calib.json`.
-
-## Инфраструктура — удалённый сервер
-
-- Сервер: 24c/96G RAM, доступ по ssh-ключу (порт нестандартный). Окружение: системный python
-  3.12 + `pip install --user` (venv недоступен без sudo), `libgomp` распакован в `~/local-libs`
-  из deb (для lightgbm/xgboost/catboost), `LD_LIBRARY_PATH` обязателен.
-- Пайплайн запуска: rsync репо (без data/, кроме train.parquet) → `build_features_ext_pca.py`
-  → `build_features_bgnbd.py` → стеки/фабрика. Долгие прогоны — строго в tmux.
-- ⚠️ Открытый инцидент: серверные сабмиты v2/v3 дают LB 1.73/2.80 при локальных fold_03
-  1.669/1.672 — чек-лист диагностики: md5 `data/train.parquet` vs локальный, полнота
-  `data/v2/features_ext` (5 фолдов × батчи), fold_03 серверного отчёта vs локального,
-  статистика CSV (rows/mean/порядок user_id vs sample_submit).
-
-
-## Бэклог
-
-Закрыто по ходу экспериментов:
-
-- ✅ Абляция лосса — RMSE на z подтверждён (exp02; Tweedie/MAE хуже).
-- ✅ Зоопарк GBDT и ансамбль — cat/lgbm/hist/xgb сравнены (exp08/13/15); q50-члены соло не
-  помогают; мульти-якорность остаётся за фабрикой (exp09).
-- ✅ Пост-обработка (зануление/изотоника поверх сабмита) — вредна/нейтральна (exp10);
-  калибровка работает только внутри мета-модели стека (exp08/15).
-- ◐ Холодный старт — частично закрыт EB-shrinkage фичами BTYD (exp04); отдельной проверки
-  сегмента tenure=0 не было.
-
-Открыто:
-
-- **exp03 end-to-end** через фабрику exp09 (семейство hurdle — приоритет №1).
-- **Плотные якоря** (Arm B2 wave1) — «плотное поле», отдельный перезапуск.
-- **exp05 TCN** — декоррелированный член бленда.
-- **pseudo/qmap/seeds** семейства фабрики — кандидаты в члены стека.
-
-### Внешнее ревью (2026-08-25, разбор гипотез)
-
-- ◐ **Праздники и сезоны распродаж как фичи по датам.** Частично закрыто: платформенный
-  YoY-индекс в сабмите (exp02, β=1); причинная календарная поправка на CV-фолдах не нужна
-  (exp11 rejected). Открыто: явные флаги праздников/распродаж (23.02, 08.03, периоды акций)
-  как фичи — дёшево закрывается внутри семейства `core` фабрики exp09.
-- 🆕 **Error analysis: где ошибаемся больше всего.** Системного разбора ошибок чемпиона
-  (exp15) по сегментам рекенси/тенюра/уровня GMV/децилям предикта не было; точечно было
-  только в exp11 (децили) и EDA. Дёшево и может задать направление следующих экспериментов —
-  высокий приоритет.
-- ✅ **Кластеризация клиентов** — закрыто exp12 (b05): GMM k=4 (+перебор kmeans/GMM k=4–10,
-  выбор по silhouette/stability/min-share) как cat/OHE-фича хуже ref; between-segment
-  дисперсия z уже покрыта непрерывными фичами.
-- ◐ **Клининг данных** — почти закрыто EDA (`reports/eda_2026_08_24.md`): пропусков/дублей/
-  отрицательных нет; расхождения `gmv ≠ gmv_search+gmv_cat` — 0.25% строк; «пустые» дни
-  конверсии (18.2%, все с `cat=1`) интерпретированы как слабый интент-сигнал. Осталось
-  решить: исключать ли расхождения split'а при построении таргета.
-- ◐ **Tweedie для CatBoost/LGBM.** CatBoost закрыто (exp02): RMSE 1.69277 < Tweedie
-  vp 1.1/1.5/1.9 < MAE 1.80181; quantile-q50 члены проверены в стеке (exp15). Для LGBM
-  Tweedie отдельно не гонялся — микрозадача семейства `core` фабрики (exp09).
-- 🆕 **Внешние ряды (курс доллара, погода).** Ряд общий для всех юзеров ⇒ это якорь-уровневая
-  ковариата (глобальный сдвиг во времени), а не юзеровая фича: место ей в мета-стадии стека /
-  калибровке (рядом с c и β·log(ŝ)), иначе дублирует сезонный индекс. Проверять на fold_03.
-
-<!-- Шаблон новой записи:
-## expNN — <название>  *(alias <старое имя>)*
-
-- **Гипотеза**: ...
-- **Метод**: ... (протокол: трейн fold_00..02 → вал fold_03, сид 42)
-- **Результат**: ... (RMSLE fold_03 ± сравнение с ref, ключевые числа по фолдам)
-- **Вывод**: adopted / rejected / next step
-- **Артефакты**: код/отчёты/сабмит — пути
--->
-
-
----
+- **Артефакты**: `archive/exp22/src/exp14_ev_calib.py`, `archive/exp22/reports/exp14_ev_calib.json`.
 
 ## exp23 — Per-user CatBoost персоналка (n=3 it20, 47 мин)
 
@@ -586,7 +545,7 @@
 - **Метод**: глобал CatBoost 500it depth8 lr0.05 на 750k rows (00..02, 130f), затем для каждого из 250k юзеров `init_model=глобал` + 20ит на его 3 строках (11.4мс/юзера). 32% юзеров с 3 одинаковыми таргетами - скип.
 - **Результат**: `fold_03 RMSLE 1.62463` vs глобал 1.67446 `-0.0498` (47.7 мин на M1 Pro). LB `submission_n5_it25.csv` (n=5) 1.6862 - переобучение на январь, blend 50/50 дает 1.66.
 - **Вывод**: персоналка работает на валидации, но оверфит на январскую яму, нужен бленд/регуляризация. Тяжелый вариант n=3 it50 (6ч на 50c) ожидается 1.638 на 1к.
-- **Артефакты**: `src/per_user_full.py` (n=3 it20, 47 мин), `src/per_user_full_n5_it25.py` (n=5 it25, 56 мин, 1.686 LB), `reports/per_user_full.json`, `reports/per_user_full_preds.npz`, графики `reports/figures/per_user_*.png`, сабмит `~/Desktop/submission_hurdle_blend.csv` (blend 1.66).
+- **Артефакты**: `archive/exp23/src/per_user_full.py` (n=3 it20, 47 мин), `archive/exp24/src/per_user_full_n5_it25.py` (n=5 it25, 56 мин, 1.686 LB), `archive/exp23/reports/per_user_full.json`, `reports/per_user_full_preds.npz`, графики `archive/exp23/reports/figures/per_user_*.png`, сабмит `submissions/submission_hurdle_blend.csv` (blend 1.66).
 
 ---
 
@@ -596,7 +555,7 @@
 - **Метод**: 5 якорей с шагом 7д (17.12,24.12,31.12,07.01,14.01) x 1k юзеров, CatBoost 500it глобал + 25ит пер-юзер.
 - **Результат**: 1k RMSLE `n3_it20 1.66271 -> n5_it25 1.63498` `-0.027` mean 14.7мс.
 - **Вывод**: прирост есть, фулл 250k оценивается 61 мин, LB не гонялся.
-- **Артефакты**: `reports/test_n5_it25.json`, `reports/per_user_dense_pilot.json`.
+- **Артефакты**: `archive/exp24/reports/test_n5_it25.json`, `archive/exp24/reports/per_user_dense_pilot.json`.
 
 ---
 
@@ -606,24 +565,53 @@
 - **Метод**: как exp23 но `ITER_PER_USER=50`, `n=3` (00,01,02), 130f, checkpoint каждые 5k, tmux на `ssh main`.
 - **Результат**: planned, пилот 1k `1.63803` mean 16.12мс (см. dense pilot).
 - **Вывод**: выделен отдельно, запуск вручную.
-- **Артефакты**: `archive/exp23/src/train_6h.py` (заглушка), логика в `src/per_user_full.py`.
+- **Артефакты**: `archive/exp25/src/train_6h.py` (заглушка), логика в `archive/exp23/src/per_user_full.py`.
 
 ---
 
 ## exp26 — Segmented LTV pipeline с Transformer blend (PR #5)
 
 - **Гипотеза**: leakage-safe иерархия `global→class→cluster` по ADI/CV² классам спроса даст робастность на нулевых/редких юзерах; Transformer на 26 неделях ×4 канала добавит декоррелированный сигнал.
-- **Метод**: `src/build_segmented_features.py` — 205 признаков напрямую из `data/train.parquet` (без `data/v2|v3`), 26-недельные ряды, классификация `smooth/erratic/intermittent/lumpy` (ADI 1.32 / CV² 0.49), `MiniBatchKMeans` до 3 кластеров внутри класса. `src/train_segmented_submit.py` — global CatBoost (1000it) + class/cluster модели (автовыбор CatBoost / HistGBDT / Ridge по `min_cat 100k / min_hist 15k / min_local 2.5k`), бленд `global:class:cluster` на `fold_02` (grid 0.1 + shift/zero), honest `fold_03`, refit `00..03→fold_end` (1M rows). `src/train_weekly_transformer.py` — Transformer `d_model 64, 2 layers, 4 heads` на тензоре `(N,26,4)` + static 32f, `src/blend_segmented_transformer.py` — мета-бленд classical/transformer по классам (tune на `fold_02`). Launchers `scripts/run_segmented_pipeline.sh` (CPU, 16 потоков) и `run_full_segmented_ensemble.sh` (CUDA/MPS).
+- **Метод**: `archive/exp26/src/build_segmented_features.py` — 205 признаков напрямую из `data/train.parquet` (без `data/v2|v3`), 26-недельные ряды, классификация `smooth/erratic/intermittent/lumpy` (ADI 1.32 / CV² 0.49), `MiniBatchKMeans` до 3 кластеров внутри класса. `archive/exp26/src/train_segmented_submit.py` — global CatBoost (1000it) + class/cluster модели (автовыбор CatBoost / HistGBDT / Ridge по `min_cat 100k / min_hist 15k / min_local 2.5k`), бленд `global:class:cluster` на `fold_02` (grid 0.1 + shift/zero), honest `fold_03`, refit `00..03→fold_end` (1M rows). `archive/exp26/src/train_weekly_transformer.py` — Transformer `d_model 64, 2 layers, 4 heads` на тензоре `(N,26,4)` + static 32f, `archive/exp26/src/blend_segmented_transformer.py` — мета-бленд classical/transformer по классам (tune на `fold_02`). Launchers `archive/exp26/scripts/run_segmented_pipeline.sh` (CPU, 16 потоков) и `run_full_segmented_ensemble.sh` (CUDA/MPS).
 - **Результат**: **Full 250k, 205f, 0 NULL, без дублей.** Classical: inner `fold_02` `global 1.70631 / class 1.70747 / cluster 1.71081 → blend 1.69682`; **holdout `fold_03` `global 1.66935 / class 1.67145 / cluster 1.67353 → blend 1.66916` (выбран)** — на уровне чемпиона exp15 (1.66908). Per-class holdout: `smooth 0.857 (n=975) / erratic 1.066 (11k) / intermittent 1.539 (116k) / lumpy 1.833 (120k)`. Transformer full 12ep: `fold_02 1.71600 / fold_03 1.68242` — хуже классики на 0.013; quick 2ep 1.732/1.686 аналогично. Blend `classical 1.66916 / transformer 1.68242 / blend 1.67276 → classical` (вес trans 0.0, только `erratic` 0.15). Сабмиты `submissions/submission_segmented.csv` (mean 33.59 median 6.12 zeros 0.004) и `submission_segmented_transformer.csv` идентичны (blend выбрал classical). Smoke 10k quick: classical `blend 1.672` vs global 1.678.
 - **Вывод**: **done, влито в main как PR #5 (`a2c9480`) и полностью валидировано на 250k (`2ef4f5d`).** Classical-ветка воспроизводится и повторяет SOTA; Transformer-ветка пока не добавляет выигрыша (нужен статический контекст/регуляризация). Базой для прод-сабмита остаётся `submission_segmented.csv`.
-- **Артефакты**: `src/build_segmented_features.py` (469), `src/train_segmented_submit.py` (726), `src/train_weekly_transformer.py` (493), `src/blend_segmented_transformer.py` (283), `docs/SEGMENTED_PIPELINE_RUNBOOK.md`, `requirements_segmented.txt`, `requirements_transformer.txt`, `reports/segmented_pipeline.json`, `reports/weekly_transformer.json`, `reports/segmented_transformer_blend.json`, `data/segmented_base/manifest.json`, `submissions/submission_segmented*.csv`.
+- **Артефакты**: `archive/exp26/src/build_segmented_features.py` (469), `archive/exp26/src/train_segmented_submit.py` (726), `archive/exp26/src/train_weekly_transformer.py` (493), `archive/exp26/src/blend_segmented_transformer.py` (283), `archive/exp26/scripts/`, `docs/SEGMENTED_PIPELINE_RUNBOOK.md`, `requirements/base.txt`, `requirements/transformer.txt`, `archive/exp26/reports/segmented_pipeline.json`, `archive/exp26/reports/weekly_transformer.json`, `archive/exp26/reports/segmented_transformer_blend.json`, `data/segmented_base/manifest.json`, `archive/exp26/submissions/submission_segmented*.csv`.
 
 ---
 
-## exp26_pilots — Диагностика per-user / dense / lag / transformer (архив)
+## exp26p — Диагностика per-user / dense / lag / transformer (архив)
 
 - **Гипотеза**: пилоты для выбора n/итераций/архитектуры перед full-прогоном.
-- **Метод**: `archive/exp26_pilots/src/` — 11 скриптов: `grid_dense_*` (n=3/5/10 dense), `grid_per_user_*` (grid depth/lr/l2/it), `lag_*` (30d/60d 4ch lags), `per_user_n7_*` (n=7 it30), `transformer_*` (90d pilot/full). 1k pilots, CatBoost/Transformer сравнение с aggregates.
+- **Метод**: `archive/exp26p/src/` — 11 скриптов: `grid_dense_*` (n=3/5/10 dense), `grid_per_user_*` (grid depth/lr/l2/it), `lag_*` (30d/60d 4ch lags), `per_user_n7_*` (n=7 it30), `transformer_*` (90d pilot/full). 1k pilots, CatBoost/Transformer сравнение с aggregates.
 - **Результат**: best grid `d4 lr0.1 l2=1 it50` 1.581 (1k, n=3), n=5 vs n=3 -0.027, n=7 24ms/юзера overfit, lag 30d RMSLE 1.86 vs agg 1.67 — lags хуже, transformer pilot 1.8 vs agg 1.67.
 - **Вывод**: архив диагностики, основа exp23/24 подтверждена, lags и чистый Transformer без статики не конкурентны.
-- **Артефакты**: `archive/exp26_pilots/` (src + reports/grid_per_user_hypers.json, per_user_n7_full.json).
+- **Артефакты**: `archive/exp26p/` (src + archive/exp26p/reports/grid_per_user_hypers.json, per_user_n7_full.json).
+
+---
+
+## Что дальше
+
+Разборы, бэклог и инциденты вынесены из журнала — журнал хранит результаты,
+`notes/` хранит то, что ещё живо.
+
+| Что | Где |
+|---|---|
+| Открытые гипотезы и задачи | [notes/backlog.md](notes/backlog.md) |
+| Разбор внешних гипотез (2026-08-25) | [notes/reviews/2026-08-25.md](notes/reviews/2026-08-25.md) |
+| Инцидент: серверные метрики хуже локальных | [notes/incidents/2026-08-25-server-lb-anomaly.md](notes/incidents/2026-08-25-server-lb-anomaly.md) |
+| Удалённый сервер: настройка и чек-листы | [docs/SERVER.md](docs/SERVER.md) |
+| Данные и feature store | [docs/DATA.md](docs/DATA.md) |
+| Протокол валидации | [docs/PROTOCOL.md](docs/PROTOCOL.md) |
+| Как завести новый эксперимент | [CONTRIBUTING.md](CONTRIBUTING.md) |
+
+## Шаблон новой записи
+
+```markdown
+## expNN — <название>  *(alias <старое имя>)*
+
+- **Гипотеза**: ...
+- **Метод**: ... (протокол: трейн fold_00..02 → вал fold_03, сид 42)
+- **Результат**: ... (RMSLE fold_03 ± сравнение с ref, ключевые числа по фолдам)
+- **Вывод**: adopted / rejected / next step
+- **Артефакты**: код/отчёты/сабмит — пути
+```

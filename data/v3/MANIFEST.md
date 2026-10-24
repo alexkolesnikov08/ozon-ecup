@@ -1,7 +1,7 @@
 # Манифест датасета v3 (утверждён голосованием 2026-08-24)
 
-Генератор: `src/build_dataset_v3.py` → `data/v3/fold_{00..03,end}.parquet`
-Отчёт сборки: `reports/dataset_v3_report.json`. Окружение: `.venv`.
+Генератор: `archive/exp19/src/build_dataset_v3.py` → `data/v3/fold_{00..03,end}.parquet`
+Отчёт сборки: `archive/exp19/reports/dataset_v3_report.json`. Окружение: `.venv`.
 
 ## Схема (85 фичей + ключи + таргет = 88 колонок на фолд)
 
@@ -46,5 +46,5 @@ prod  = pl.read_parquet("data/v3/fold_end.parquet")  # инференс сабм
 z=log1p(target), предикт expm1. Референсные точки fold_03: zero 3.20364, median 2.28900,
 naive 2.19506, CatBoost exp01 1.70261, стек v2 1.67103.
 
-Калибровка уровня поверх предиктов — `reports/exp06_calibration.json`,
+Калибровка уровня поверх предиктов — `archive/exp06/reports/exp06_calibration.json`,
 hurdle-приоры — `reports/exp03_hurdle_priors.json`.
