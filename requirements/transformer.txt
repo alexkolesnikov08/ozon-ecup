@@ -1,0 +1,6 @@
+# Полный ансамбль сегментированного пайплайна: базовые зависимости + PyTorch.
+# Установка:  python -m pip install -r requirements/transformer.txt
+
+-r base.txt
+
+torch>=2.2
